@@ -350,11 +350,23 @@ class SQLDesignerApp {
           this.loadCurrentProject(false);
         }
         this.updateProjectSelect();
+      } else if (value === '__demo__') {
+        // Materializa o demo a partir do template se ele não existir
+        if (!this.projects['Projeto Demo']) {
+          this.saveState();
+          this.projects['Projeto Demo'] = { sql: DEMO_SQL, positions: {} };
+          this.saveStore();
+        }
+        if (this.currentName !== 'Projeto Demo') {
+          this.switchProject('Projeto Demo');
+        } else {
+          this.updateProjectSelect();
+        }
       } else if (value === '__delete__') {
         if (confirm(t('confirmDeleteProject', { name: this.currentName }))) {
           delete this.projects[this.currentName];
           if (Object.keys(this.projects).length === 0) {
-            this.projects['Projeto 1'] = { sql: '', positions: {} };
+            this.projects['Projeto Demo'] = { sql: DEMO_SQL, positions: {} };
           }
           this.currentName = Object.keys(this.projects)[0];
           localStorage.setItem('sqldesigner_current', this.currentName);
@@ -617,13 +629,21 @@ class SQLDesignerApp {
   updateProjectSelect() {
     this.projectSelect.innerHTML = '';
 
-    Object.keys(this.projects).sort().forEach(name => {
+    Object.keys(this.projects).filter(n => n !== 'Projeto Demo').sort().forEach(name => {
       const opt = document.createElement('option');
       opt.value = name;
       opt.textContent = '🗂 ' + name;
       if (name === this.currentName) opt.selected = true;
       this.projectSelect.appendChild(opt);
     });
+
+    // Entrada fixa: o demo está sempre disponível, mesmo que nunca tenha
+    // sido materializado ou tenha sido excluído
+    const demoOpt = document.createElement('option');
+    demoOpt.value = '__demo__';
+    demoOpt.textContent = '✨ Projeto Demo';
+    if (this.currentName === 'Projeto Demo') demoOpt.selected = true;
+    this.projectSelect.appendChild(demoOpt);
 
     const sep = document.createElement('option');
     sep.disabled = true;
