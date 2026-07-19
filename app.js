@@ -37,8 +37,12 @@ class SQLDesignerApp {
     this.arrangeCircleBtn = document.getElementById('arrange-circle-btn');
     
     this.exportSvgBtn = document.getElementById('export-svg-btn');
-    this.toggleTriggersBtn = document.getElementById('toggle-triggers-btn');
-    this.toggleProcsBtn = document.getElementById('toggle-procs-btn');
+    this.settingsBtn = document.getElementById('settings-btn');
+    this.settingsOverlay = document.getElementById('settings-overlay');
+    this.settingsCloseBtn = document.getElementById('settings-close-btn');
+    this.settingsLangList = document.getElementById('settings-lang-list');
+    this.switchTriggers = document.getElementById('switch-triggers');
+    this.switchProcs = document.getElementById('switch-procs');
     
     // Initialize Canvas Controller
     this.canvas = new ERCanvas('canvas-container', 'svg-connections', 'card-container');
@@ -54,26 +58,41 @@ class SQLDesignerApp {
       ui = JSON.parse(localStorage.getItem('sqldesigner_ui')) || {};
     } catch (e) { /* ignore */ }
     this.setSidebarCollapsed(ui.sidebar === 'closed', false);
-    this.setEditorFolded(ui.editor === 'folded');
-    this.buildLangBar();
+    // Editor starts folded by default — expand only when the user asks
+    this.setEditorFolded(ui.editor !== 'open');
+    this.buildLangList();
     I18N.apply();
   }
 
-  buildLangBar() {
-    const bar = document.getElementById('lang-bar');
-    bar.innerHTML = '';
+  // Language options are built dynamically from whatever lang.js publishes —
+  // adding a language there is all it takes for it to show up here
+  buildLangList() {
+    this.settingsLangList.innerHTML = '';
     Object.keys(LANGS).forEach(code => {
       const btn = document.createElement('button');
-      btn.className = 'lang-btn' + (code === I18N.current ? ' active' : '');
-      btn.textContent = LANGS[code].flag;
-      btn.title = LANGS[code].name;
+      btn.className = 'lang-option' + (code === I18N.current ? ' active' : '');
+      btn.innerHTML = `<span class="lang-flag">${LANGS[code].flag}</span><span>${LANGS[code].name}</span>`;
       btn.addEventListener('click', () => {
         I18N.set(code);
-        bar.querySelectorAll('.lang-btn').forEach(b => b.classList.remove('active'));
+        this.settingsLangList.querySelectorAll('.lang-option').forEach(b => b.classList.remove('active'));
         btn.classList.add('active');
       });
-      bar.appendChild(btn);
+      this.settingsLangList.appendChild(btn);
     });
+  }
+
+  syncSettingsUI() {
+    this.switchTriggers.checked = this.canvas.showTriggers;
+    this.switchProcs.checked = this.canvas.showProcs;
+  }
+
+  openSettings() {
+    this.syncSettingsUI();
+    this.settingsOverlay.hidden = false;
+  }
+
+  closeSettings() {
+    this.settingsOverlay.hidden = true;
   }
 
   onLanguageChange() {
@@ -207,14 +226,26 @@ class SQLDesignerApp {
     // Export SVG
     this.exportSvgBtn.addEventListener('click', () => this.exportSVG());
 
-    // Routine visibility toggles
-    this.toggleTriggersBtn.addEventListener('click', () => {
-      const on = this.canvas.toggleRoutineVisibility('trigger');
-      this.toggleTriggersBtn.classList.toggle('toggle-on', on);
+    // Settings modal
+    this.settingsBtn.addEventListener('click', () => this.openSettings());
+    this.settingsCloseBtn.addEventListener('click', () => this.closeSettings());
+    this.settingsOverlay.addEventListener('click', (e) => {
+      if (e.target === this.settingsOverlay) this.closeSettings();
     });
-    this.toggleProcsBtn.addEventListener('click', () => {
-      const on = this.canvas.toggleRoutineVisibility('proc');
-      this.toggleProcsBtn.classList.toggle('toggle-on', on);
+    window.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && !this.settingsOverlay.hidden) this.closeSettings();
+    });
+
+    // Routine visibility switches (inside the settings modal)
+    this.switchTriggers.addEventListener('change', () => {
+      if (this.switchTriggers.checked !== this.canvas.showTriggers) {
+        this.canvas.toggleRoutineVisibility('trigger');
+      }
+    });
+    this.switchProcs.addEventListener('change', () => {
+      if (this.switchProcs.checked !== this.canvas.showProcs) {
+        this.canvas.toggleRoutineVisibility('proc');
+      }
     });
 
     // Watch node drag changes in Canvas
@@ -333,8 +364,7 @@ class SQLDesignerApp {
     const toggles = project.toggles || {};
     this.canvas.showTriggers = toggles.triggers !== false;
     this.canvas.showProcs = toggles.procs !== false;
-    this.toggleTriggersBtn.classList.toggle('toggle-on', this.canvas.showTriggers);
-    this.toggleProcsBtn.classList.toggle('toggle-on', this.canvas.showProcs);
+    this.syncSettingsUI();
 
     this.canvas.selectedTable = null;
     this.canvas.focusReturnPositions = null;

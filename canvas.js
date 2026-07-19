@@ -205,9 +205,12 @@ class ERCanvas {
     // Prevent context menu on right click to allow panning
     this.container.addEventListener('contextmenu', e => e.preventDefault());
 
-    // ESC clears the current table focus
+    // ESC clears the current table focus (unless a modal is open — it wins)
     window.addEventListener('keydown', (e) => {
-      if (e.key === 'Escape' && this.selectedTable) {
+      if (e.key !== 'Escape') return;
+      const overlay = document.getElementById('settings-overlay');
+      if (overlay && !overlay.hidden) return;
+      if (this.selectedTable) {
         this.clearTableFocus();
       }
     });

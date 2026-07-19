@@ -28,7 +28,7 @@ A jornada começou no **Google Antigravity**, que montou um core bem interessant
 - Layouts automáticos (força, grade, círculo), zoom/pan, exportar **SVG**
 - Editor SQL que rola até o `CREATE` da tabela/trigger selecionada
 - Sidebar recolhível (`Ctrl+B`) pra quem quer só o canvas
-- **Interface em 4 idiomas** (bandeirinhas na sidebar): português, inglês, francês e — porque ninguém pediu — **Klingon** 🖖 (`raS tu'be'lu'. Qu'vatlh!`)
+- **Interface em 4 idiomas** (no ⚙️ de configurações): português, inglês, francês e — porque ninguém pediu — **Klingon** 🖖 (`raS tu'be'lu'. Qu'vatlh!`)
 
 ## Como usar
 
@@ -41,6 +41,10 @@ A jornada começou no **Google Antigravity**, que montou um core bem interessant
 ## Contribuições
 
 Pull requests são bem-vindos! Issues também — de bug a ideia maluca. Só lembre da essência lá de cima: **análise, não edição**. PRs que tentarem transformar isso num dbdiagram da vida vão receber um "obrigado, mas não" carinhoso. (A menos que me pegue num daqueles fins de semana. Vide aviso legal.)
+
+### Quer traduzir? Isso sim é MUITO bem-vindo 🌍
+
+Adicionar um idioma é a contribuição mais fácil do mundo: abra o [`lang.js`](lang.js), copie um dos blocos existentes (o `en` é um bom molde), traduza as ~50 chaves e pronto — **o seletor de idiomas no ⚙️ se monta sozinho** a partir do que estiver publicado ali. Sem registro, sem build, sem tocar em mais nenhum arquivo. Se o Klingon entrou, o seu idioma também entra. Esperanto? Guarani? Latim? Manda o PR.
 
 ---
 
@@ -57,6 +61,8 @@ Pull requests são bem-vindos! Issues também — de bug a ideia maluca. Só lem
 **Argeu Carlos Thiesen** — argeu.thiesen@gmail.com
 
 Codificado por IA (Google Antigravity + Claude Code), supervisionado por um humano com opiniões fortes.
+
+O parceiro inicial desta jornada foi o **Claude Fable 5** — que encontrou os bugs, montou a interface e traduziu a ferramenta pra Klingon sem questionar minha sanidade. Quando ele deixar de fazer parte do meu pacote, quem assume o posto de copiloto do Argeu é o **Claude Opus 4.8**. A passagem de bastão está documentada aqui para fins históricos e sentimentais. 🤝
 
 ## Licença
 

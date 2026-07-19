@@ -65,8 +65,6 @@
       </div>
     </div>
 
-    <!-- Language flags -->
-    <div id="lang-bar" class="lang-bar"></div>
   </aside>
 
   <!-- Interactive Canvas Area -->
@@ -118,14 +116,41 @@
 
       <div class="toolbar-divider"></div>
 
-      <button id="toggle-triggers-btn" class="toolbar-btn toggle-on" data-i18n-title="toggleTriggers" title="Exibir/ocultar triggers">⚡</button>
-      <button id="toggle-procs-btn" class="toolbar-btn toggle-on" data-i18n-title="toggleProcs" title="Exibir/ocultar procedures e functions">⚙️</button>
-
-      <div class="toolbar-divider"></div>
-
       <button id="export-svg-btn" class="toolbar-btn" data-i18n-title="exportSvg" title="Exportar como imagem SVG">💾</button>
+      <button id="settings-btn" class="toolbar-btn" data-i18n-title="settingsTitle" title="Configurações">⚙️</button>
     </div>
   </main>
+
+  <!-- Settings Modal -->
+  <div id="settings-overlay" class="settings-overlay" hidden>
+    <div class="settings-modal">
+      <div class="settings-header">
+        <span data-i18n="settingsTitle">Configurações</span>
+        <button id="settings-close-btn" class="icon-btn" data-i18n-title="close" title="Fechar">✕</button>
+      </div>
+
+      <div class="settings-section">
+        <div class="settings-section-title" data-i18n="settingsLang">Idioma</div>
+        <div id="settings-lang-list" class="settings-lang-list">
+          <!-- populated dynamically from lang.js -->
+        </div>
+      </div>
+
+      <div class="settings-section">
+        <div class="settings-section-title" data-i18n="settingsView">Visualização</div>
+        <label class="switch-row">
+          <span data-i18n="lblTriggers">Exibir triggers</span>
+          <input type="checkbox" id="switch-triggers" class="switch-input" checked>
+          <span class="switch-slider"></span>
+        </label>
+        <label class="switch-row">
+          <span data-i18n="lblProcs">Exibir procedures e functions</span>
+          <input type="checkbox" id="switch-procs" class="switch-input" checked>
+          <span class="switch-slider"></span>
+        </label>
+      </div>
+    </div>
+  </div>
 
   <!-- Scripts -->
   <script src="lang.js"></script>
