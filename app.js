@@ -27,9 +27,14 @@ class SQLDesignerApp {
     this.editorFoldBtn = document.getElementById('editor-fold-btn');
     this.highlightCode = document.getElementById('sql-highlight-code');
     this.highlightLayer = document.getElementById('sql-highlight-layer');
+    this.cleanView = document.getElementById('sql-clean-view');
+    this.cleanCode = document.getElementById('sql-clean-code');
     this.snippetEl = document.getElementById('sql-snippet');
     this.snippetName = document.getElementById('snippet-name');
     this.snippetCode = document.getElementById('snippet-code');
+    this.switchComments = document.getElementById('switch-comments');
+    this.hideComments = false;
+    this._mirror = null;
     
     // Floating tools
     this.zoomInBtn = document.getElementById('zoom-in-btn');
@@ -65,8 +70,64 @@ class SQLDesignerApp {
     this.setSidebarCollapsed(ui.sidebar === 'closed', false);
     // Editor starts folded by default — expand only when the user asks
     this.setEditorFolded(ui.editor !== 'open');
+    this.applyCommentsMode(ui.hideComments === true);
     this.buildLangList();
     I18N.apply();
+  }
+
+  // "Ocultar comentários": troca o editor por uma visão limpa somente leitura
+  applyCommentsMode(on) {
+    this.hideComments = on;
+    this.sqlEditor.style.display = on ? 'none' : '';
+    this.highlightLayer.style.display = on ? 'none' : '';
+    this.cleanView.hidden = !on;
+    if (on) this.renderCleanView(this.canvas ? this.canvas.selectedTable : null);
+    this.saveUiState();
+    if (this.canvas) this.refreshSnippet(this.canvas.selectedTable);
+  }
+
+  stripComments(sql) {
+    return sql
+      .replace(/\/\*[\s\S]*?\*\//g, '')
+      .replace(/--[^\n]*/g, '')
+      .replace(/^[ \t]*#[^\n]*/gm, '')
+      .replace(/[ \t]+$/gm, '')
+      .replace(/\n{3,}/g, '\n\n')
+      .trim() + '\n';
+  }
+
+  renderCleanView(selectedName) {
+    const filtered = this.stripComments(this.sqlEditor.value);
+    const range = selectedName ? this.findStatementRange(selectedName, filtered) : null;
+
+    if (range) {
+      this.cleanCode.innerHTML =
+        SQLHighlighter.highlight(filtered.slice(0, range.start)) +
+        '<span class="stmt-focus">' +
+        SQLHighlighter.highlight(filtered.slice(range.start, range.end)) +
+        '</span>' +
+        SQLHighlighter.highlight(filtered.slice(range.end));
+      const focusEl = this.cleanView.querySelector('.stmt-focus');
+      if (focusEl) this.cleanView.scrollTop = Math.max(0, focusEl.offsetTop - 44);
+    } else {
+      this.cleanCode.innerHTML = SQLHighlighter.highlight(filtered);
+    }
+  }
+
+  // Mede a posição em pixels de um offset do texto reproduzindo a quebra
+  // de linha real do editor (linhas longas quebram — contar '\n' não basta)
+  measureEditorOffsetY(charOffset) {
+    if (!this._mirror) {
+      this._mirror = document.createElement('div');
+      this._mirror.className = 'sql-editor sql-mirror';
+      document.body.appendChild(this._mirror);
+    }
+    const style = getComputedStyle(this.sqlEditor);
+    const lineHeight = parseFloat(style.lineHeight) || 21;
+    const padBottom = parseFloat(style.paddingBottom) || 0;
+    this._mirror.style.width = this.sqlEditor.clientWidth + 'px';
+    this._mirror.textContent = this.sqlEditor.value.slice(0, charOffset) + '​';
+    return { y: this._mirror.scrollHeight - padBottom - lineHeight, lineHeight };
   }
 
   // Language options are built dynamically from whatever lang.js publishes —
@@ -89,6 +150,7 @@ class SQLDesignerApp {
   syncSettingsUI() {
     this.switchTriggers.checked = this.canvas.showTriggers;
     this.switchProcs.checked = this.canvas.showProcs;
+    this.switchComments.checked = this.hideComments;
   }
 
   openSettings() {
@@ -109,7 +171,8 @@ class SQLDesignerApp {
   saveUiState() {
     localStorage.setItem('sqldesigner_ui', JSON.stringify({
       sidebar: this.sidebarEl.classList.contains('collapsed') ? 'closed' : 'open',
-      editor: this.sidebarEl.classList.contains('editor-folded') ? 'folded' : 'open'
+      editor: this.sidebarEl.classList.contains('editor-folded') ? 'folded' : 'open',
+      hideComments: this.hideComments === true
     }));
   }
 
@@ -136,6 +199,9 @@ class SQLDesignerApp {
       this.highlightCode.textContent = code + '\n'; // plain fallback for huge dumps
     }
     this.highlightLayer.scrollTop = this.sqlEditor.scrollTop;
+    if (this.hideComments) {
+      this.renderCleanView(this.canvas ? this.canvas.selectedTable : null);
+    }
   }
 
   initEvents() {
@@ -274,6 +340,9 @@ class SQLDesignerApp {
         this.canvas.toggleRoutineVisibility('proc');
       }
     });
+    this.switchComments.addEventListener('change', () => {
+      this.applyCommentsMode(this.switchComments.checked);
+    });
 
     // Watch node drag changes in Canvas
     this.canvas.onStateChange = () => this.saveState();
@@ -283,8 +352,8 @@ class SQLDesignerApp {
   }
 
   // Find the [start, end) range of the CREATE statement for a table or routine
-  findStatementRange(name) {
-    const sql = this.sqlEditor.value;
+  findStatementRange(name, src) {
+    const sql = src !== undefined ? src : this.sqlEditor.value;
     const escaped = name.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
     const isRoutine = this.canvas.routines && this.canvas.routines[name];
 
@@ -339,7 +408,8 @@ class SQLDesignerApp {
       this.snippetEl.hidden = true;
       return;
     }
-    const code = this.sqlEditor.value.slice(range.start, range.end);
+    let code = this.sqlEditor.value.slice(range.start, range.end);
+    if (this.hideComments) code = this.stripComments(code).trim();
     this.snippetName.textContent = name;
     this.snippetCode.innerHTML = SQLHighlighter.highlight(code);
     this.snippetEl.hidden = false;
@@ -357,17 +427,19 @@ class SQLDesignerApp {
     // With the editor folded, the snippet is the code view — nothing to scroll
     if (this.sidebarEl.classList.contains('editor-folded')) return;
 
+    // Clean mode: highlight and scroll inside the read-only view
+    if (this.hideComments) {
+      this.renderCleanView(tableName);
+      return;
+    }
+
     const range = this.findStatementRange(tableName);
     if (!range) return;
 
-    const sql = this.sqlEditor.value;
-
-    // Scroll the textarea so the statement appears near the top
-    const linesBefore = sql.slice(0, range.start).split('\n').length - 1;
-    const style = getComputedStyle(this.sqlEditor);
-    const lineHeight = parseFloat(style.lineHeight) || 21;
-    const padTop = parseFloat(style.paddingTop) || 0;
-    this.sqlEditor.scrollTop = Math.max(0, linesBefore * lineHeight + padTop - lineHeight * 2);
+    // Scroll using real wrapped-line metrics (long dump lines wrap in the
+    // sidebar, so counting '\n' lands in the wrong place)
+    const pos = this.measureEditorOffsetY(range.start);
+    this.sqlEditor.scrollTop = Math.max(0, pos.y - pos.lineHeight * 2);
     this.highlightLayer.scrollTop = this.sqlEditor.scrollTop;
 
     // Select the block (focus is required for the selection to be visible)

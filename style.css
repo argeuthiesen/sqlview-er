@@ -123,29 +123,42 @@ body {
   display: none;
 }
 
-/* Clickable section label that folds the SQL editor */
+/* Project switcher: its own full-width row above the editor */
+.project-select {
+  width: 100%;
+  padding: 9px 12px;
+  font-size: 13px;
+}
+
+/* Clickable bar that folds the SQL editor — full width, reads as a control */
 .label-toggle {
-  background: transparent;
-  border: none;
+  width: 100%;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
   color: var(--text-muted);
   font: inherit;
   font-size: 13px;
   font-weight: 500;
+  letter-spacing: 0.4px;
   display: flex;
   align-items: center;
-  gap: 6px;
+  gap: 10px;
   cursor: pointer;
-  padding: 0;
-  transition: color 0.2s;
+  padding: 10px 14px;
+  transition: all 0.2s;
 }
 
 .label-toggle:hover {
   color: var(--text-main);
+  border-color: var(--border-hover);
+  background: rgba(99, 102, 241, 0.10);
 }
 
 .fold-chevron {
   display: inline-block;
-  font-size: 10px;
+  font-size: 12px;
+  color: var(--accent);
   transition: transform 0.2s;
 }
 
@@ -295,6 +308,37 @@ body {
   overflow: hidden;
   color: #cbd5e1;
   pointer-events: none;
+}
+
+/* Visão limpa: leitura sem comentários, rolagem própria */
+.sql-clean {
+  pointer-events: auto;
+  overflow: auto;
+  z-index: 2;
+  background: rgba(3, 7, 18, 0.6);
+}
+
+.sql-clean[hidden] {
+  display: none;
+}
+
+.stmt-focus {
+  display: inline-block;
+  width: 100%;
+  background: rgba(52, 211, 153, 0.10);
+  box-shadow: inset 2px 0 0 var(--accent);
+  border-radius: 4px;
+}
+
+/* Espelho de medição: mesma métrica do editor, fora da tela */
+.sql-mirror {
+  position: absolute !important;
+  left: -99999px !important;
+  top: 0 !important;
+  height: auto !important;
+  overflow: visible !important;
+  visibility: hidden;
+  display: block;
 }
 
 /* Cores dos tokens (paleta da interface) */
