@@ -1,0 +1,8 @@
+# SO / editores
+.DS_Store
+Thumbs.db
+*.swp
+
+# Dumps locais de teste
+*.sql
+!docs/*.sql

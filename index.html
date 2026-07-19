@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SQL Designer | Diagramas ER</title>
+  <meta name="description" content="Gere diagramas ER interativos instantaneamente a partir de comandos SQL CREATE TABLE. Arraste tabelas, visualize relacionamentos e exporte schemas.">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- Sidebar Panel -->
+  <aside class="sidebar">
+    <div class="sidebar-header">
+      <div class="logo-section">
+        <span class="logo-icon">📊</span>
+        <div>
+          <h1>SQL Designer</h1>
+          <p>Editor de Diagramas ER</p>
+        </div>
+      </div>
+      <button id="sidebar-collapse-btn" class="icon-btn" title="Recolher painel (Ctrl+B)">❮</button>
+    </div>
+
+    <!-- SQL DDL Input Section -->
+    <div class="editor-section">
+      <div class="section-label">
+        <button id="editor-fold-btn" class="label-toggle" title="Mostrar/ocultar o editor SQL">
+          <span class="fold-chevron">▾</span>
+          <span>CÓDIGO SQL (DDL)</span>
+        </button>
+        <select id="project-select" class="sample-select" title="Alternar entre projetos"></select>
+      </div>
+
+      <div class="editor-wrapper">
+        <textarea id="sql-editor-input" class="sql-editor" spellcheck="false" placeholder="Cole aqui seus comandos SQL CREATE TABLE..."></textarea>
+      </div>
+    </div>
+
+    <!-- Buttons -->
+    <div class="action-buttons">
+      <button id="upload-btn" class="btn btn-secondary" title="Importar arquivo SQL">
+        <span>📂 Importar SQL</span>
+      </button>
+      <button id="clear-btn" class="btn btn-secondary" title="Limpar editor">
+        <span>🧹 Limpar</span>
+      </button>
+      <button id="save-project-btn" class="btn btn-primary" title="Salvar projeto (SQL + posições + visão)">
+        <span>💾 Salvar projeto</span>
+      </button>
+      <button id="open-project-btn" class="btn btn-secondary" title="Abrir projeto salvo">
+        <span>📁 Abrir projeto</span>
+      </button>
+      <input type="file" id="sql-file-input" accept=".sql,.txt" style="display: none;">
+      <input type="file" id="project-file-input" accept=".json,application/json" style="display: none;">
+    </div>
+
+    <!-- Outline Table List -->
+    <div class="outline-section">
+      <div class="section-label">
+        <span>TABELAS EXTRAÍDAS</span>
+      </div>
+      <div id="table-outline-list" class="outline-list">
+        <!-- populated by app.js -->
+      </div>
+    </div>
+  </aside>
+
+  <!-- Interactive Canvas Area -->
+  <main id="canvas-container" class="canvas-container">
+
+    <!-- Reopen chip (shown when the sidebar is collapsed) -->
+    <button id="sidebar-open-btn" class="sidebar-open-btn" title="Mostrar painel (Ctrl+B)" hidden>❯</button>
+    
+    <!-- Virtual viewports for Zoom & Pan -->
+    <div id="canvas-viewport" class="canvas-viewport">
+      <!-- Background SVG overlay (behind cards) -->
+      <svg id="svg-connections-back" class="svg-overlay svg-back"></svg>
+      <!-- HTML Table Node Cards container -->
+      <div id="card-container" class="card-container"></div>
+      <!-- Foreground SVG overlay (above cards) -->
+      <svg id="svg-connections-front" class="svg-overlay svg-front"></svg>
+      <!-- Elevated card layer: focused/connected cards go here so highlighted lines pass UNDER them -->
+      <div id="card-container-top" class="card-container card-container-top"></div>
+    </div>
+
+    <!-- Help Instruction Overlay -->
+    <div class="helper-overlay">
+      <div class="helper-row">
+        <span class="helper-key">Clique + arrastar cabeçalho</span>
+        <span>Mover tabela</span>
+      </div>
+      <div class="helper-row">
+        <span class="helper-key">Botão direito/meio + arrastar</span>
+        <span>Mover canvas</span>
+      </div>
+      <div class="helper-row">
+        <span class="helper-key">Roda do mouse</span>
+        <span>Zoom</span>
+      </div>
+    </div>
+
+    <!-- Floating Canvas Controls -->
+    <div class="floating-toolbar">
+      <button id="zoom-in-btn" class="toolbar-btn" title="Aproximar">➕</button>
+      <button id="zoom-out-btn" class="toolbar-btn" title="Afastar">➖</button>
+      <button id="zoom-reset-btn" class="toolbar-btn" title="Restaurar zoom (1:1)">🔄</button>
+      <button id="zoom-fit-btn" class="toolbar-btn" title="Ajustar à tela">🔍</button>
+
+      <div class="toolbar-divider"></div>
+
+      <button id="arrange-force-btn" class="toolbar-btn" title="Organizar automaticamente">🧲</button>
+      <button id="arrange-grid-btn" class="toolbar-btn" title="Organizar em grade">🔢</button>
+      <button id="arrange-circle-btn" class="toolbar-btn" title="Organizar em círculo">⚪</button>
+
+      <div class="toolbar-divider"></div>
+
+      <button id="toggle-triggers-btn" class="toolbar-btn toggle-on" title="Exibir/ocultar triggers">⚡</button>
+      <button id="toggle-procs-btn" class="toolbar-btn toggle-on" title="Exibir/ocultar procedures e functions">⚙️</button>
+
+      <div class="toolbar-divider"></div>
+
+      <button id="export-svg-btn" class="toolbar-btn" title="Exportar como imagem SVG">💾</button>
+    </div>
+  </main>
+
+  <!-- Scripts -->
+  <script src="parser.js"></script>
+  <script src="canvas.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
+
