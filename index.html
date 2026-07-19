@@ -33,7 +33,14 @@
         <select id="project-select" class="sample-select" data-i18n-title="projectCombo" title="Alternar entre projetos"></select>
       </div>
 
+      <!-- Snippet contextual: DDL do objeto selecionado quando o editor está dobrado -->
+      <div id="sql-snippet" class="sql-snippet" hidden>
+        <div class="snippet-title">⌖ <span id="snippet-name"></span></div>
+        <pre class="snippet-pre"><code id="snippet-code"></code></pre>
+      </div>
+
       <div class="editor-wrapper">
+        <pre id="sql-highlight-layer" class="sql-highlight" aria-hidden="true"><code id="sql-highlight-code"></code></pre>
         <textarea id="sql-editor-input" class="sql-editor" spellcheck="false" data-i18n-placeholder="editorPlaceholder" placeholder="Cole aqui seus comandos SQL CREATE TABLE..."></textarea>
       </div>
     </div>
@@ -155,6 +162,7 @@
 
   <!-- Scripts -->
   <script src="lang.js"></script>
+  <script src="syntax.js"></script>
   <script src="parser.js"></script>
   <script src="canvas.js"></script>
   <script src="app.js"></script>

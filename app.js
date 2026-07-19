@@ -25,6 +25,11 @@ class SQLDesignerApp {
     this.sidebarCollapseBtn = document.getElementById('sidebar-collapse-btn');
     this.sidebarOpenBtn = document.getElementById('sidebar-open-btn');
     this.editorFoldBtn = document.getElementById('editor-fold-btn');
+    this.highlightCode = document.getElementById('sql-highlight-code');
+    this.highlightLayer = document.getElementById('sql-highlight-layer');
+    this.snippetEl = document.getElementById('sql-snippet');
+    this.snippetName = document.getElementById('snippet-name');
+    this.snippetCode = document.getElementById('snippet-code');
     
     // Floating tools
     this.zoomInBtn = document.getElementById('zoom-in-btn');
@@ -117,13 +122,35 @@ class SQLDesignerApp {
   setEditorFolded(folded) {
     this.sidebarEl.classList.toggle('editor-folded', folded);
     this.saveUiState();
+    // Snippet only makes sense while the editor is folded
+    if (this.canvas) this.refreshSnippet(this.canvas.selectedTable);
+  }
+
+  // Re-render the syntax highlight layer under the textarea
+  updateHighlightLayer() {
+    const code = this.sqlEditor.value;
+    if (code.length < 300000) {
+      // trailing newline keeps the layer height in sync with the textarea
+      this.highlightCode.innerHTML = SQLHighlighter.highlight(code) + '\n';
+    } else {
+      this.highlightCode.textContent = code + '\n'; // plain fallback for huge dumps
+    }
+    this.highlightLayer.scrollTop = this.sqlEditor.scrollTop;
   }
 
   initEvents() {
-    // Auto-regenerate the diagram while typing (debounced)
+    // Auto-regenerate the diagram while typing (debounced);
+    // the highlight layer updates immediately
     this.sqlEditor.addEventListener('input', () => {
+      this.updateHighlightLayer();
       clearTimeout(this.regenTimer);
       this.regenTimer = setTimeout(() => this.generateDiagram(false, false), 600);
+    });
+
+    // Keep the highlight layer scrolled in lockstep with the textarea
+    this.sqlEditor.addEventListener('scroll', () => {
+      this.highlightLayer.scrollTop = this.sqlEditor.scrollTop;
+      this.highlightLayer.scrollLeft = this.sqlEditor.scrollLeft;
     });
 
     // Import SQL file → becomes a new named project
@@ -255,25 +282,19 @@ class SQLDesignerApp {
     this.canvas.onFocusChange = (tableName) => this.highlightTableInEditor(tableName);
   }
 
-  highlightTableInEditor(tableName) {
+  // Find the [start, end) range of the CREATE statement for a table or routine
+  findStatementRange(name) {
     const sql = this.sqlEditor.value;
-
-    if (!tableName) {
-      // Collapse any selection when focus is cleared
-      this.sqlEditor.setSelectionRange(0, 0);
-      return;
-    }
-
-    const escaped = tableName.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-    const isRoutine = this.canvas.routines && this.canvas.routines[tableName];
+    const escaped = name.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    const isRoutine = this.canvas.routines && this.canvas.routines[name];
 
     let match, start, end = sql.length;
 
     if (isRoutine) {
-      // Locate CREATE TRIGGER/PROCEDURE/FUNCTION name — select up to the closing END
+      // CREATE TRIGGER/PROCEDURE/FUNCTION name — up to the closing END
       const re = new RegExp('(?:TRIGGER|PROCEDURE|FUNCTION)\\s+(?:IF\\s+NOT\\s+EXISTS\\s+)?[`"\\[]?' + escaped + '[`"\\]]?', 'i');
       match = re.exec(sql);
-      if (!match) return;
+      if (!match) return null;
       start = match.index;
 
       const endRe = /\bEND\b\s*(?:;;|\$\$|\*\/\s*;{0,2}|;)/g;
@@ -281,10 +302,10 @@ class SQLDesignerApp {
       const em = endRe.exec(sql);
       end = em ? em.index + em[0].length : Math.min(sql.length, start + 400);
     } else {
-      // Locate the CREATE TABLE statement (quoted or bare identifier)
+      // CREATE TABLE statement (quoted or bare identifier)
       const re = new RegExp('CREATE\\s+TABLE[^(;]*?[`"\\[]?' + escaped + '[`"\\]]?\\s*\\(', 'i');
       match = re.exec(sql);
-      if (!match) return;
+      if (!match) return null;
       start = match.index;
 
       // Find the end of the statement: matching closing paren, then the semicolon
@@ -302,16 +323,56 @@ class SQLDesignerApp {
       }
     }
 
+    return { start, end };
+  }
+
+  // Contextual DDL snippet in the sidebar — visible only while the editor
+  // is folded and something is selected on the canvas
+  refreshSnippet(name) {
+    const folded = this.sidebarEl.classList.contains('editor-folded');
+    if (!name || !folded) {
+      this.snippetEl.hidden = true;
+      return;
+    }
+    const range = this.findStatementRange(name);
+    if (!range) {
+      this.snippetEl.hidden = true;
+      return;
+    }
+    const code = this.sqlEditor.value.slice(range.start, range.end);
+    this.snippetName.textContent = name;
+    this.snippetCode.innerHTML = SQLHighlighter.highlight(code);
+    this.snippetEl.hidden = false;
+  }
+
+  highlightTableInEditor(tableName) {
+    this.refreshSnippet(tableName);
+
+    if (!tableName) {
+      // Collapse any selection when focus is cleared
+      this.sqlEditor.setSelectionRange(0, 0);
+      return;
+    }
+
+    // With the editor folded, the snippet is the code view — nothing to scroll
+    if (this.sidebarEl.classList.contains('editor-folded')) return;
+
+    const range = this.findStatementRange(tableName);
+    if (!range) return;
+
+    const sql = this.sqlEditor.value;
+
     // Scroll the textarea so the statement appears near the top
-    const linesBefore = sql.slice(0, start).split('\n').length - 1;
+    const linesBefore = sql.slice(0, range.start).split('\n').length - 1;
     const style = getComputedStyle(this.sqlEditor);
     const lineHeight = parseFloat(style.lineHeight) || 21;
     const padTop = parseFloat(style.paddingTop) || 0;
     this.sqlEditor.scrollTop = Math.max(0, linesBefore * lineHeight + padTop - lineHeight * 2);
+    this.highlightLayer.scrollTop = this.sqlEditor.scrollTop;
 
     // Select the block (focus is required for the selection to be visible)
     this.sqlEditor.focus({ preventScroll: true });
-    this.sqlEditor.setSelectionRange(start, end);
+    this.sqlEditor.setSelectionRange(range.start, range.end);
   }
 
   loadStore() {
@@ -520,6 +581,7 @@ class SQLDesignerApp {
       this.canvas.fitToScreen();
     }
 
+    this.updateHighlightLayer();
     this.saveState();
   }
 
