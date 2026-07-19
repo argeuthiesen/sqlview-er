@@ -30,6 +30,7 @@
       <button id="editor-fold-btn" class="label-toggle" data-i18n-title="foldEditor" title="Mostrar/ocultar o editor SQL">
         <span class="fold-chevron">▾</span>
         <span data-i18n="sqlSection">CÓDIGO SQL (DDL)</span>
+        <span id="fold-hint" class="fold-hint"></span>
       </button>
 
       <!-- Snippet contextual: DDL do objeto selecionado quando o editor está dobrado -->
@@ -39,6 +40,7 @@
       </div>
 
       <div class="editor-wrapper">
+        <button id="comments-toggle" class="comments-toggle" data-i18n-title="lblHideComments" title="Ocultar comentários do SQL">--</button>
         <pre id="sql-highlight-layer" class="sql-highlight" aria-hidden="true"><code id="sql-highlight-code"></code></pre>
         <textarea id="sql-editor-input" class="sql-editor" spellcheck="false" data-i18n-placeholder="editorPlaceholder" placeholder="Cole aqui seus comandos SQL CREATE TABLE..."></textarea>
         <!-- Visão limpa (sem comentários), somente leitura -->

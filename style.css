@@ -157,9 +157,22 @@ body {
 
 .fold-chevron {
   display: inline-block;
-  font-size: 12px;
+  font-size: 14px;
   color: var(--accent);
   transition: transform 0.2s;
+}
+
+/* Textual affordance: "mostrar"/"ocultar" on the bar's right side */
+.fold-hint {
+  margin-left: auto;
+  font-size: 11px;
+  font-weight: 400;
+  color: var(--text-dark);
+  text-transform: lowercase;
+}
+
+.label-toggle:hover .fold-hint {
+  color: var(--accent);
 }
 
 /* Folded editor: chevron rotates, editor hides, outline takes the space */
@@ -172,7 +185,11 @@ body {
 }
 
 .sidebar.editor-folded .editor-section {
+  /* Content-sized when folded — flex-shrink 0 stops the section from
+     being squeezed below its content (children were spilling over) */
   flex-grow: 0;
+  flex-shrink: 0;
+  min-height: auto;
 }
 
 .sidebar.editor-folded .outline-section {
@@ -328,6 +345,36 @@ body {
   background: rgba(52, 211, 153, 0.10);
   box-shadow: inset 2px 0 0 var(--accent);
   border-radius: 4px;
+}
+
+/* Chip liga/desliga de comentários, flutuando no canto do editor */
+.comments-toggle {
+  position: absolute;
+  top: 8px;
+  right: 10px;
+  z-index: 3;
+  font-family: 'Fira Code', monospace;
+  font-size: 11px;
+  font-weight: 500;
+  padding: 3px 9px;
+  border-radius: 6px;
+  border: 1px solid var(--border-color);
+  background: rgba(15, 23, 42, 0.85);
+  color: var(--text-dark);
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.comments-toggle:hover {
+  color: var(--text-main);
+  border-color: var(--border-hover);
+}
+
+.comments-toggle.on {
+  color: var(--accent);
+  border-color: rgba(52, 211, 153, 0.5);
+  background: rgba(52, 211, 153, 0.10);
+  text-decoration: line-through;
 }
 
 /* Espelho de medição: mesma métrica do editor, fora da tela */

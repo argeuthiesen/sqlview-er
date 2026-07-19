@@ -33,6 +33,7 @@ class SQLDesignerApp {
     this.snippetName = document.getElementById('snippet-name');
     this.snippetCode = document.getElementById('snippet-code');
     this.switchComments = document.getElementById('switch-comments');
+    this.commentsToggle = document.getElementById('comments-toggle');
     this.hideComments = false;
     this._mirror = null;
     
@@ -81,6 +82,8 @@ class SQLDesignerApp {
     this.sqlEditor.style.display = on ? 'none' : '';
     this.highlightLayer.style.display = on ? 'none' : '';
     this.cleanView.hidden = !on;
+    this.commentsToggle.classList.toggle('on', on);
+    if (this.switchComments) this.switchComments.checked = on;
     if (on) this.renderCleanView(this.canvas ? this.canvas.selectedTable : null);
     this.saveUiState();
     if (this.canvas) this.refreshSnippet(this.canvas.selectedTable);
@@ -165,6 +168,7 @@ class SQLDesignerApp {
   onLanguageChange() {
     // Rebuild everything that renders translated strings from JS
     this.updateProjectSelect();
+    this.updateFoldHint();
     this.generateDiagram(false, false);
   }
 
@@ -184,9 +188,15 @@ class SQLDesignerApp {
 
   setEditorFolded(folded) {
     this.sidebarEl.classList.toggle('editor-folded', folded);
+    this.updateFoldHint();
     this.saveUiState();
     // Snippet only makes sense while the editor is folded
     if (this.canvas) this.refreshSnippet(this.canvas.selectedTable);
+  }
+
+  updateFoldHint() {
+    const folded = this.sidebarEl.classList.contains('editor-folded');
+    document.getElementById('fold-hint').textContent = t(folded ? 'foldShow' : 'foldHide');
   }
 
   // Re-render the syntax highlight layer under the textarea
@@ -342,6 +352,9 @@ class SQLDesignerApp {
     });
     this.switchComments.addEventListener('change', () => {
       this.applyCommentsMode(this.switchComments.checked);
+    });
+    this.commentsToggle.addEventListener('click', () => {
+      this.applyCommentsMode(!this.hideComments);
     });
 
     // Watch node drag changes in Canvas
