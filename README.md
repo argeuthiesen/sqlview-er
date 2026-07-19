@@ -8,6 +8,8 @@
 
 <p align="center"><strong>▶ <a href="https://argeuthiesen.github.io/sqlview-er/">Testar agora no navegador</a></strong> — nada pra instalar</p>
 
+![Navegando pelo schema com o modo foco: tabela → tabela → trigger → tabela → procedure, com o DDL acompanhando na sidebar](docs/demo.gif)
+
 ![sqlview-er em ação: modo foco na tabela "pedidos", com trigger e procedure como nós do diagrama](docs/screenshot.png)
 
 ## A história (ou: por que isso existe)
