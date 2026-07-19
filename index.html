@@ -16,40 +16,40 @@
         <span class="logo-icon">📊</span>
         <div>
           <h1>SQL Designer</h1>
-          <p>Editor de Diagramas ER</p>
+          <p data-i18n="subtitle">Editor de Diagramas ER</p>
         </div>
       </div>
-      <button id="sidebar-collapse-btn" class="icon-btn" title="Recolher painel (Ctrl+B)">❮</button>
+      <button id="sidebar-collapse-btn" class="icon-btn" data-i18n-title="collapseSidebar" title="Recolher painel (Ctrl+B)">❮</button>
     </div>
 
     <!-- SQL DDL Input Section -->
     <div class="editor-section">
       <div class="section-label">
-        <button id="editor-fold-btn" class="label-toggle" title="Mostrar/ocultar o editor SQL">
+        <button id="editor-fold-btn" class="label-toggle" data-i18n-title="foldEditor" title="Mostrar/ocultar o editor SQL">
           <span class="fold-chevron">▾</span>
-          <span>CÓDIGO SQL (DDL)</span>
+          <span data-i18n="sqlSection">CÓDIGO SQL (DDL)</span>
         </button>
-        <select id="project-select" class="sample-select" title="Alternar entre projetos"></select>
+        <select id="project-select" class="sample-select" data-i18n-title="projectCombo" title="Alternar entre projetos"></select>
       </div>
 
       <div class="editor-wrapper">
-        <textarea id="sql-editor-input" class="sql-editor" spellcheck="false" placeholder="Cole aqui seus comandos SQL CREATE TABLE..."></textarea>
+        <textarea id="sql-editor-input" class="sql-editor" spellcheck="false" data-i18n-placeholder="editorPlaceholder" placeholder="Cole aqui seus comandos SQL CREATE TABLE..."></textarea>
       </div>
     </div>
 
     <!-- Buttons -->
     <div class="action-buttons">
-      <button id="upload-btn" class="btn btn-secondary" title="Importar arquivo SQL">
-        <span>📂 Importar SQL</span>
+      <button id="upload-btn" class="btn btn-secondary" data-i18n-title="titleImport" title="Importar arquivo SQL">
+        <span data-i18n="btnImport">📂 Importar SQL</span>
       </button>
-      <button id="clear-btn" class="btn btn-secondary" title="Limpar editor">
-        <span>🧹 Limpar</span>
+      <button id="clear-btn" class="btn btn-secondary" data-i18n-title="titleClear" title="Limpar editor">
+        <span data-i18n="btnClear">🧹 Limpar</span>
       </button>
-      <button id="save-project-btn" class="btn btn-primary" title="Salvar projeto (SQL + posições + visão)">
-        <span>💾 Salvar projeto</span>
+      <button id="save-project-btn" class="btn btn-primary" data-i18n-title="titleSaveProj" title="Salvar projeto (SQL + posições + visão)">
+        <span data-i18n="btnSaveProj">💾 Salvar projeto</span>
       </button>
-      <button id="open-project-btn" class="btn btn-secondary" title="Abrir projeto salvo">
-        <span>📁 Abrir projeto</span>
+      <button id="open-project-btn" class="btn btn-secondary" data-i18n-title="titleOpenProj" title="Abrir projeto salvo">
+        <span data-i18n="btnOpenProj">📁 Abrir projeto</span>
       </button>
       <input type="file" id="sql-file-input" accept=".sql,.txt" style="display: none;">
       <input type="file" id="project-file-input" accept=".json,application/json" style="display: none;">
@@ -58,19 +58,22 @@
     <!-- Outline Table List -->
     <div class="outline-section">
       <div class="section-label">
-        <span>TABELAS EXTRAÍDAS</span>
+        <span data-i18n="outlineTitle">TABELAS EXTRAÍDAS</span>
       </div>
       <div id="table-outline-list" class="outline-list">
         <!-- populated by app.js -->
       </div>
     </div>
+
+    <!-- Language flags -->
+    <div id="lang-bar" class="lang-bar"></div>
   </aside>
 
   <!-- Interactive Canvas Area -->
   <main id="canvas-container" class="canvas-container">
 
     <!-- Reopen chip (shown when the sidebar is collapsed) -->
-    <button id="sidebar-open-btn" class="sidebar-open-btn" title="Mostrar painel (Ctrl+B)" hidden>❯</button>
+    <button id="sidebar-open-btn" class="sidebar-open-btn" data-i18n-title="expandSidebar" title="Mostrar painel (Ctrl+B)" hidden>❯</button>
     
     <!-- Virtual viewports for Zoom & Pan -->
     <div id="canvas-viewport" class="canvas-viewport">
@@ -87,44 +90,45 @@
     <!-- Help Instruction Overlay -->
     <div class="helper-overlay">
       <div class="helper-row">
-        <span class="helper-key">Clique + arrastar cabeçalho</span>
-        <span>Mover tabela</span>
+        <span class="helper-key" data-i18n="helpMoveTableKey">Clique + arrastar cabeçalho</span>
+        <span data-i18n="helpMoveTable">Mover tabela</span>
       </div>
       <div class="helper-row">
-        <span class="helper-key">Botão direito/meio + arrastar</span>
-        <span>Mover canvas</span>
+        <span class="helper-key" data-i18n="helpPanKey">Botão direito/meio + arrastar</span>
+        <span data-i18n="helpPan">Mover canvas</span>
       </div>
       <div class="helper-row">
-        <span class="helper-key">Roda do mouse</span>
-        <span>Zoom</span>
+        <span class="helper-key" data-i18n="helpZoomKey">Roda do mouse</span>
+        <span data-i18n="helpZoom">Zoom</span>
       </div>
     </div>
 
     <!-- Floating Canvas Controls -->
     <div class="floating-toolbar">
-      <button id="zoom-in-btn" class="toolbar-btn" title="Aproximar">➕</button>
-      <button id="zoom-out-btn" class="toolbar-btn" title="Afastar">➖</button>
-      <button id="zoom-reset-btn" class="toolbar-btn" title="Restaurar zoom (1:1)">🔄</button>
-      <button id="zoom-fit-btn" class="toolbar-btn" title="Ajustar à tela">🔍</button>
+      <button id="zoom-in-btn" class="toolbar-btn" data-i18n-title="zoomIn" title="Aproximar">➕</button>
+      <button id="zoom-out-btn" class="toolbar-btn" data-i18n-title="zoomOut" title="Afastar">➖</button>
+      <button id="zoom-reset-btn" class="toolbar-btn" data-i18n-title="zoomReset" title="Restaurar zoom (1:1)">🔄</button>
+      <button id="zoom-fit-btn" class="toolbar-btn" data-i18n-title="zoomFit" title="Ajustar à tela">🔍</button>
 
       <div class="toolbar-divider"></div>
 
-      <button id="arrange-force-btn" class="toolbar-btn" title="Organizar automaticamente">🧲</button>
-      <button id="arrange-grid-btn" class="toolbar-btn" title="Organizar em grade">🔢</button>
-      <button id="arrange-circle-btn" class="toolbar-btn" title="Organizar em círculo">⚪</button>
+      <button id="arrange-force-btn" class="toolbar-btn" data-i18n-title="arrangeForce" title="Organizar automaticamente">🧲</button>
+      <button id="arrange-grid-btn" class="toolbar-btn" data-i18n-title="arrangeGrid" title="Organizar em grade">🔢</button>
+      <button id="arrange-circle-btn" class="toolbar-btn" data-i18n-title="arrangeCircle" title="Organizar em círculo">⚪</button>
 
       <div class="toolbar-divider"></div>
 
-      <button id="toggle-triggers-btn" class="toolbar-btn toggle-on" title="Exibir/ocultar triggers">⚡</button>
-      <button id="toggle-procs-btn" class="toolbar-btn toggle-on" title="Exibir/ocultar procedures e functions">⚙️</button>
+      <button id="toggle-triggers-btn" class="toolbar-btn toggle-on" data-i18n-title="toggleTriggers" title="Exibir/ocultar triggers">⚡</button>
+      <button id="toggle-procs-btn" class="toolbar-btn toggle-on" data-i18n-title="toggleProcs" title="Exibir/ocultar procedures e functions">⚙️</button>
 
       <div class="toolbar-divider"></div>
 
-      <button id="export-svg-btn" class="toolbar-btn" title="Exportar como imagem SVG">💾</button>
+      <button id="export-svg-btn" class="toolbar-btn" data-i18n-title="exportSvg" title="Exportar como imagem SVG">💾</button>
     </div>
   </main>
 
   <!-- Scripts -->
+  <script src="lang.js"></script>
   <script src="parser.js"></script>
   <script src="canvas.js"></script>
   <script src="app.js"></script>

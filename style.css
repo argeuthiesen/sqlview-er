@@ -381,6 +381,43 @@ body {
   border-radius: 20px;
 }
 
+/* Language flag bar */
+.lang-bar {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  padding: 10px 24px;
+  border-top: 1px solid var(--border-color);
+}
+
+.lang-btn {
+  background: transparent;
+  border: 1px solid transparent;
+  font-size: 18px;
+  width: 34px;
+  height: 30px;
+  border-radius: 8px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0.45;
+  filter: grayscale(40%);
+  transition: all 0.2s;
+}
+
+.lang-btn:hover {
+  opacity: 0.85;
+  filter: none;
+}
+
+.lang-btn.active {
+  opacity: 1;
+  filter: none;
+  border-color: var(--primary);
+  background-color: rgba(99, 102, 241, 0.12);
+}
+
 /* Canvas Area */
 .canvas-container {
   flex-grow: 1;

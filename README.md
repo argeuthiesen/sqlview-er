@@ -28,6 +28,7 @@ A jornada começou no **Google Antigravity**, que montou um core bem interessant
 - Layouts automáticos (força, grade, círculo), zoom/pan, exportar **SVG**
 - Editor SQL que rola até o `CREATE` da tabela/trigger selecionada
 - Sidebar recolhível (`Ctrl+B`) pra quem quer só o canvas
+- **Interface em 4 idiomas** (bandeirinhas na sidebar): português, inglês, francês e — porque ninguém pediu — **Klingon** 🖖 (`raS tu'be'lu'. Qu'vatlh!`)
 
 ## Como usar
 

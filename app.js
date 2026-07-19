@@ -55,6 +55,31 @@ class SQLDesignerApp {
     } catch (e) { /* ignore */ }
     this.setSidebarCollapsed(ui.sidebar === 'closed', false);
     this.setEditorFolded(ui.editor === 'folded');
+    this.buildLangBar();
+    I18N.apply();
+  }
+
+  buildLangBar() {
+    const bar = document.getElementById('lang-bar');
+    bar.innerHTML = '';
+    Object.keys(LANGS).forEach(code => {
+      const btn = document.createElement('button');
+      btn.className = 'lang-btn' + (code === I18N.current ? ' active' : '');
+      btn.textContent = LANGS[code].flag;
+      btn.title = LANGS[code].name;
+      btn.addEventListener('click', () => {
+        I18N.set(code);
+        bar.querySelectorAll('.lang-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+      });
+      bar.appendChild(btn);
+    });
+  }
+
+  onLanguageChange() {
+    // Rebuild everything that renders translated strings from JS
+    this.updateProjectSelect();
+    this.generateDiagram(false, false);
   }
 
   saveUiState() {
@@ -92,7 +117,7 @@ class SQLDesignerApp {
       const reader = new FileReader();
       reader.onload = (evt) => {
         const suggested = file.name.replace(/\.(sql|txt)$/i, '');
-        const name = this.askProjectName('Nome do projeto para este SQL:', suggested);
+        const name = this.askProjectName(t('promptImportName'), suggested);
         if (!name) return;
         this.saveState(); // persist the outgoing project first
         this.projects[name] = { sql: String(evt.target.result), positions: {} };
@@ -118,7 +143,7 @@ class SQLDesignerApp {
     this.projectSelect.addEventListener('change', (e) => {
       const value = e.target.value;
       if (value === '__new__') {
-        const name = this.askProjectName('Nome do novo projeto:', 'Novo projeto');
+        const name = this.askProjectName(t('promptNewName'), t('defaultNewName'));
         if (name) {
           this.saveState();
           this.projects[name] = { sql: '', positions: {} };
@@ -129,7 +154,7 @@ class SQLDesignerApp {
         }
         this.updateProjectSelect();
       } else if (value === '__delete__') {
-        if (confirm(`Excluir o projeto "${this.currentName}"? Isso não pode ser desfeito.`)) {
+        if (confirm(t('confirmDeleteProject', { name: this.currentName }))) {
           delete this.projects[this.currentName];
           if (Object.keys(this.projects).length === 0) {
             this.projects['Projeto 1'] = { sql: '', positions: {} };
@@ -353,12 +378,12 @@ class SQLDesignerApp {
 
     const newOpt = document.createElement('option');
     newOpt.value = '__new__';
-    newOpt.textContent = '➕ Novo projeto';
+    newOpt.textContent = t('newProject');
     this.projectSelect.appendChild(newOpt);
 
     const delOpt = document.createElement('option');
     delOpt.value = '__delete__';
-    delOpt.textContent = '🗑 Excluir projeto atual';
+    delOpt.textContent = t('deleteProject');
     this.projectSelect.appendChild(delOpt);
   }
 
@@ -399,16 +424,16 @@ class SQLDesignerApp {
       try {
         payload = JSON.parse(evt.target.result);
       } catch (e) {
-        alert('Arquivo de projeto inválido.');
+        alert(t('invalidProject'));
         return;
       }
       if (!payload || typeof payload.sql !== 'string') {
-        alert('Arquivo de projeto inválido.');
+        alert(t('invalidProject'));
         return;
       }
 
       const suggested = payload.name || file.name.replace(/(\.sqldesigner)?\.json$/i, '');
-      const name = this.askProjectName('Nome do projeto importado:', suggested);
+      const name = this.askProjectName(t('promptOpenName'), suggested);
       if (!name) return;
 
       this.saveState();
@@ -474,7 +499,7 @@ class SQLDesignerApp {
     const sortedRoutines = Object.keys(routines).sort();
 
     if (sortedNames.length === 0 && sortedRoutines.length === 0) {
-      this.outlineList.innerHTML = '<div style="color: var(--text-dark); font-size: 13px; text-align: center; margin-top: 20px;">Nenhuma tabela extraída.</div>';
+      this.outlineList.innerHTML = `<div style="color: var(--text-dark); font-size: 13px; text-align: center; margin-top: 20px;">${t('noTables')}</div>`;
       return;
     }
 
@@ -485,7 +510,7 @@ class SQLDesignerApp {
 
       item.innerHTML = `
         <span class="outline-item-name">${table.name}</span>
-        <span class="outline-item-count">${table.columns.length} col</span>
+        <span class="outline-item-count">${table.columns.length} ${t('colSuffix')}</span>
       `;
 
       // Outline item interaction: click to center canvas on table

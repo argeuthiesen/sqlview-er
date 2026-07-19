@@ -441,7 +441,7 @@ class ERCanvas {
     header.innerHTML = `
       <span class="table-title">${table.name}</span>
       <span class="table-actions">
-        <button class="table-action-btn delete-table-btn" title="Excluir tabela">×</button>
+        <button class="table-action-btn delete-table-btn" title="${t('deleteTable')}">×</button>
       </span>
     `;
     
@@ -479,14 +479,14 @@ class ERCanvas {
       if (col.isPK && col.isFK) {
         keyIcon = '<span class="key-icon pk-fk">🔑🔗</span>';
       } else if (col.isPK) {
-        keyIcon = '<span class="key-icon pk" title="Chave primária">🔑</span>';
+        keyIcon = `<span class="key-icon pk" title="${t('pkTitle')}">🔑</span>`;
       } else if (col.isFK) {
-        keyIcon = '<span class="key-icon fk" title="Chave estrangeira">🔗</span>';
+        keyIcon = `<span class="key-icon fk" title="${t('fkTitle')}">🔗</span>`;
       } else {
         keyIcon = '<span class="key-icon empty"></span>';
       }
 
-      const nullability = col.isNullable ? '' : '<span class="not-null-indicator" title="Não nulo">*</span>';
+      const nullability = col.isNullable ? '' : `<span class="not-null-indicator" title="${t('notNullTitle')}">*</span>`;
 
       colRow.innerHTML = `
         <div class="col-meta">
@@ -558,7 +558,7 @@ class ERCanvas {
   }
 
   deleteTable(tableName) {
-    if (confirm(`Tem certeza que deseja excluir a tabela "${tableName}"?`)) {
+    if (confirm(t('confirmDeleteTable', { name: tableName }))) {
       // Remove relationships connected to this table
       this.relationships = this.relationships.filter(r => r.fromTable !== tableName && r.toTable !== tableName);
 
