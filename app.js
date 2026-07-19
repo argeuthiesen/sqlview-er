@@ -4,6 +4,80 @@
 
 // Imports removed for global script loading
 
+// Schema do "Projeto Demo" — criado apenas na primeira visita, quando
+// ainda não existe nenhum projeto salvo no navegador
+const DEMO_SQL = `-- ------------------------------------------------------------------
+-- Projeto Demo do sqlview-er: uma lojinha fictícia com tabelas,
+-- relacionamentos, triggers, procedure e function.
+-- Clique numa tabela pra focar; ESC volta. Importe seu SQL quando quiser!
+-- ------------------------------------------------------------------
+
+CREATE TABLE clientes (
+  cliId INT PRIMARY KEY AUTO_INCREMENT,
+  cliNome VARCHAR(255) NOT NULL,
+  cliEmail VARCHAR(255) UNIQUE NOT NULL,
+  cliCriadoEm DATETIME
+);
+
+CREATE TABLE produtos (
+  proId INT PRIMARY KEY AUTO_INCREMENT,
+  proNome VARCHAR(255) NOT NULL,
+  proPreco DECIMAL(10,2) NOT NULL,
+  proEstoque INT DEFAULT 0
+);
+
+CREATE TABLE pedidos (
+  pedId INT PRIMARY KEY AUTO_INCREMENT,
+  pedCliente INT NOT NULL,
+  pedData DATETIME NOT NULL,
+  pedStatus ENUM('aberto','pago','enviado') NOT NULL,
+  pedTotal DECIMAL(10,2) DEFAULT 0,
+  FOREIGN KEY (pedCliente) REFERENCES clientes(cliId)
+);
+
+CREATE TABLE pedidoItens (
+  piId INT PRIMARY KEY AUTO_INCREMENT,
+  piPedido INT NOT NULL,
+  piProduto INT NOT NULL,
+  piQtde INT NOT NULL,
+  piValor DECIMAL(10,2) NOT NULL,
+  FOREIGN KEY (piPedido) REFERENCES pedidos(pedId),
+  FOREIGN KEY (piProduto) REFERENCES produtos(proId)
+);
+
+CREATE TABLE entregas (
+  entId INT PRIMARY KEY AUTO_INCREMENT,
+  entPedido INT NOT NULL,
+  entRastreio VARCHAR(50),
+  entPrevisao DATE,
+  FOREIGN KEY (entPedido) REFERENCES pedidos(pedId)
+);
+
+-- Triggers: a lógica escondida que ninguém lembra que existe
+DELIMITER ;;
+CREATE TRIGGER trg_pedido_total AFTER INSERT ON pedidoItens
+FOR EACH ROW BEGIN
+  UPDATE pedidos SET pedTotal = pedTotal + NEW.piValor WHERE pedId = NEW.piPedido;
+END ;;
+
+CREATE TRIGGER trg_baixa_estoque AFTER INSERT ON pedidoItens
+FOR EACH ROW BEGIN
+  UPDATE produtos SET proEstoque = proEstoque - NEW.piQtde WHERE proId = NEW.piProduto;
+END ;;
+
+CREATE PROCEDURE relatorioVendas(IN pInicio DATE)
+BEGIN
+  SELECT * FROM pedidos WHERE pedData >= pInicio;
+END ;;
+
+CREATE FUNCTION totalCliente(pCliente INT) RETURNS DECIMAL(10,2)
+DETERMINISTIC
+BEGIN
+  RETURN (SELECT SUM(pedTotal) FROM pedidos WHERE pedCliente = pCliente);
+END ;;
+DELIMITER ;
+`;
+
 class SQLDesignerApp {
   constructor() {
     this.sqlEditor = document.getElementById('sql-editor-input');
@@ -491,8 +565,11 @@ class SQLDesignerApp {
       }
     }
 
+    // Primeira visita: nasce com um projeto demo completo (tabelas,
+    // triggers, procedure e function) em vez de um editor vazio
     if (Object.keys(this.projects).length === 0) {
-      this.projects['Projeto 1'] = { sql: '', positions: {} };
+      this.projects['Projeto Demo'] = { sql: DEMO_SQL, positions: {} };
+      this.saveStore();
     }
 
     const saved = localStorage.getItem('sqldesigner_current');
