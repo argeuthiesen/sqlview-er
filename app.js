@@ -94,6 +94,7 @@ class SQLDesignerApp {
       .replace(/\/\*[\s\S]*?\*\//g, '')
       .replace(/--[^\n]*/g, '')
       .replace(/^[ \t]*#[^\n]*/gm, '')
+      .replace(/^[ \t]*;[ \t;]*$/gm, '') // ';' órfãos deixados por /*!...*/;
       .replace(/[ \t]+$/gm, '')
       .replace(/\n{3,}/g, '\n\n')
       .trim() + '\n';
