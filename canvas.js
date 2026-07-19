@@ -64,7 +64,34 @@ class ERCanvas {
   }
 
   getCardEl(name) {
+    const cached = this.cardEls && this.cardEls[name];
+    if (cached && cached.isConnected) return cached;
     return document.querySelector(`[data-table-card="${name}"], [data-routine-card="${name}"]`);
+  }
+
+  /**
+   * Guarda elementos e geometria dos nós.
+   *
+   * Largura, altura e a posição das linhas de coluna não mudam enquanto os nós
+   * se movem — só x/y muda. Mas eram relidos a cada frame da animação, e ler
+   * offsetWidth logo depois de escrever style.left força layout síncrono. Com
+   * um schema real isso eram ~1000 layouts forçados por frame.
+   *
+   * Precisa rodar depois que os cards estão no DOM. Zoom não invalida: a escala
+   * é transform, não altera as métricas de layout.
+   */
+  buildGeomCache() {
+    this.cardEls = {};
+    this.geom = {};
+    document.querySelectorAll('[data-table-card], [data-routine-card]').forEach((el) => {
+      const name = el.getAttribute('data-table-card') || el.getAttribute('data-routine-card');
+      this.cardEls[name] = el;
+      const g = { w: el.offsetWidth, h: el.offsetHeight, cols: {} };
+      el.querySelectorAll('[data-column-row]').forEach((c) => {
+        g.cols[c.getAttribute('data-column-row')] = c.offsetTop + c.offsetHeight / 2;
+      });
+      this.geom[name] = g;
+    });
   }
 
   isRoutineVisible(routine) {
@@ -380,6 +407,7 @@ class ERCanvas {
     // 4. Draw connection lines
     // Wait a brief tick for offset Heights to populate in DOM
     setTimeout(() => {
+      this.buildGeomCache();
       this.drawRelationships();
     }, 50);
   }
@@ -588,14 +616,16 @@ class ERCanvas {
     const table = this.tables[tableName];
     if (!table) return null;
 
-    const cardEl = document.querySelector(`[data-table-card="${tableName}"]`);
-    if (!cardEl) return { x: table.x + 120, y: table.y + 40, side: 'right' };
+    // Geometria vem da cache: no meio da animação o DOM não mudou de tamanho,
+    // e consultá-lo aqui forçava layout a cada chamada (2x por relação, por frame).
+    const g = this.geom && this.geom[tableName];
+    if (!g) return { x: table.x + 120, y: table.y + 40, side: 'right' };
 
-    const colEl = cardEl.querySelector(`[data-column-row="${columnName}"]`);
-    if (!colEl) return { x: table.x + 120, y: table.y + 50, side: 'right' };
+    const colCenter = g.cols[columnName];
+    if (colCenter === undefined) return { x: table.x + 120, y: table.y + 50, side: 'right' };
 
-    const cardWidth = cardEl.offsetWidth || 240;
-    const rowY = table.y + colEl.offsetTop + colEl.offsetHeight / 2;
+    const cardWidth = g.w || 240;
+    const rowY = table.y + colCenter;
 
     const otherTable = this.tables[otherTableName];
     let rowX = table.x;
@@ -619,6 +649,10 @@ class ERCanvas {
   }
 
   drawRelationships() {
+    // Rede de segurança: render() preenche a cache num setTimeout, e um arrasto
+    // logo depois de carregar pode chegar aqui antes disso.
+    if (!this.geom) this.buildGeomCache();
+
     // Remove existing relationship/routine lines from both SVGs
     this.svgBack.querySelectorAll('.relationship-group').forEach(l => l.remove());
     if (this.svgFront) {
@@ -700,11 +734,11 @@ class ERCanvas {
       if (!routine || !table || routine.x === undefined || table.x === undefined) return;
       if (!this.isRoutineVisible(routine)) return;
 
-      const rEl = this.getCardEl(routine.name);
-      const tEl = this.getCardEl(table.name);
-      const rw = (rEl && rEl.offsetWidth) || 200;
-      const rh = (rEl && rEl.offsetHeight) || 56;
-      const tw = (tEl && tEl.offsetWidth) || 240;
+      const rg = (this.geom && this.geom[routine.name]) || null;
+      const tg = (this.geom && this.geom[table.name]) || null;
+      const rw = (rg && rg.w) || 200;
+      const rh = (rg && rg.h) || 56;
+      const tw = (tg && tg.w) || 240;
 
       // Routine connects from its side; table receives on its header
       const routineOnLeft = routine.x + rw / 2 < table.x + tw / 2;
