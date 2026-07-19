@@ -1,0 +1,69 @@
+<svg viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg">
+<!-- sqlview-er logo "Farol" — a lente de foco: dentro dela o schema acorda; fora, dorme.
+     SVG codificado à mão (Claude Fable 5), paleta idêntica à interface. -->
+<defs>
+  <clipPath id="sq"><rect x="8" y="8" width="496" height="496" rx="112"/></clipPath>
+  <clipPath id="lens"><circle cx="256" cy="248" r="170"/></clipPath>
+  <filter id="desat"><feColorMatrix type="saturate" values="0.10"/></filter>
+  <filter id="soft" x="-60%" y="-60%" width="220%" height="220%"><feGaussianBlur stdDeviation="16"/></filter>
+  <filter id="soft2" x="-60%" y="-60%" width="220%" height="220%"><feGaussianBlur stdDeviation="6"/></filter>
+  <radialGradient id="vig" cx="50%" cy="45%" r="75%">
+    <stop offset="55%" stop-color="#000" stop-opacity="0"/>
+    <stop offset="100%" stop-color="#000" stop-opacity=".42"/>
+  </radialGradient>
+  <linearGradient id="rim" x1="0" y1="0" x2="1" y2="1">
+    <stop offset="0" stop-color="#5eead4"/>
+    <stop offset=".5" stop-color="#34d399"/>
+    <stop offset="1" stop-color="#166e50"/>
+  </linearGradient>
+  <pattern id="dots" width="24" height="24" patternUnits="userSpaceOnUse">
+    <circle cx="2" cy="2" r="1.2" fill="#94a3b8" opacity=".07"/>
+  </pattern>
+
+  <g id="net" fill="none" stroke-linecap="round">
+    <ellipse cx="256" cy="248" rx="86" ry="60" fill="#34d399" opacity=".17" filter="url(#soft)"/>
+    <!-- conexões -->
+    <path d="M214,224 C186,208 172,192 158,174" stroke="#34d399" stroke-width="4.2"/>
+    <path d="M300,222 C328,206 342,190 355,173" stroke="#eab308" stroke-width="3.6" stroke-dasharray="7 8"/>
+    <path d="M302,276 C330,292 344,308 357,326" stroke="#c084fc" stroke-width="3.6" stroke-dasharray="7 8"/>
+    <path d="M212,274 C186,290 172,306 159,324" stroke="#34d399" stroke-width="4.2"/>
+    <!-- continuações fantasmas -->
+    <path d="M140,158 C116,132 96,112 82,98" stroke="#94a3b8" stroke-width="3.2"/>
+    <path d="M372,158 C396,132 416,112 430,98" stroke="#94a3b8" stroke-width="3.2"/>
+    <path d="M374,340 C398,366 418,386 432,400" stroke="#94a3b8" stroke-width="3.2"/>
+    <path d="M142,340 C118,366 98,386 84,400" stroke="#94a3b8" stroke-width="3.2"/>
+    <!-- nós fantasmas nos cantos -->
+    <rect x="56" y="72" width="40" height="28" rx="8" stroke="#818cf8" stroke-width="3.2" fill="#6366f1" fill-opacity=".07"/>
+    <rect x="416" y="72" width="40" height="28" rx="8" stroke="#eab308" stroke-width="3.2" fill="#eab308" fill-opacity=".07"/>
+    <rect x="416" y="398" width="40" height="28" rx="8" stroke="#c084fc" stroke-width="3.2" fill="#c084fc" fill-opacity=".07"/>
+    <rect x="56" y="398" width="40" height="28" rx="8" stroke="#818cf8" stroke-width="3.2" fill="#6366f1" fill-opacity=".07"/>
+    <!-- satélites -->
+    <rect x="118" y="146" width="52" height="36" rx="10" stroke="#818cf8" stroke-width="3.6" fill="#6366f1" fill-opacity=".10"/>
+    <line x1="130" y1="164" x2="158" y2="164" stroke="#818cf8" stroke-width="2.6" opacity=".55"/>
+    <rect x="342" y="146" width="52" height="36" rx="10" stroke="#eab308" stroke-width="3.6" fill="#eab308" fill-opacity=".10"/>
+    <line x1="354" y1="164" x2="382" y2="164" stroke="#eab308" stroke-width="2.6" opacity=".55"/>
+    <rect x="344" y="316" width="52" height="36" rx="10" stroke="#c084fc" stroke-width="3.6" fill="#c084fc" fill-opacity=".10"/>
+    <line x1="356" y1="334" x2="384" y2="334" stroke="#c084fc" stroke-width="2.6" opacity=".55"/>
+    <rect x="118" y="316" width="52" height="36" rx="10" stroke="#818cf8" stroke-width="3.6" fill="#6366f1" fill-opacity=".10"/>
+    <line x1="130" y1="334" x2="158" y2="334" stroke="#818cf8" stroke-width="2.6" opacity=".55"/>
+    <!-- ponto de chave primária -->
+    <circle cx="305" cy="220" r="5.4" fill="#eab308" stroke="none"/>
+    <!-- nó herói: a tabela em foco -->
+    <rect x="204" y="214" width="104" height="68" rx="16" stroke="#34d399" stroke-width="4.6" fill="#34d399" fill-opacity=".13"/>
+    <line x1="222" y1="238" x2="278" y2="238" stroke="#34d399" stroke-width="3.2" opacity=".65"/>
+    <line x1="222" y1="258" x2="260" y2="258" stroke="#34d399" stroke-width="3.2" opacity=".45"/>
+  </g>
+</defs>
+
+<g clip-path="url(#sq)">
+  <rect x="8" y="8" width="496" height="496" fill="#12161f"/>
+  <rect x="8" y="8" width="496" height="496" fill="url(#dots)"/>
+  <use href="#net" filter="url(#desat)" opacity=".26"/>
+  <use href="#net" clip-path="url(#lens)"/>
+  <circle cx="256" cy="248" r="170" fill="none" stroke="#34d399" stroke-width="8" opacity=".26" filter="url(#soft2)"/>
+  <circle cx="256" cy="248" r="170" fill="none" stroke="url(#rim)" stroke-width="3.6"/>
+  <path d="M 132,140 A 170,170 0 0 1 256,78" fill="none" stroke="#f0fdfa" stroke-width="2.4" opacity=".5" stroke-linecap="round"/>
+  <rect x="8" y="8" width="496" height="496" fill="url(#vig)"/>
+</g>
+<rect x="8" y="8" width="496" height="496" rx="112" fill="none" stroke="rgba(148,163,184,.14)" stroke-width="2"/>
+</svg>

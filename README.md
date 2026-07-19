@@ -1,6 +1,12 @@
-# sqlview-er 📊
+<p align="center">
+  <img src="docs/logo.svg" width="140" alt="sqlview-er — a lente de foco">
+</p>
+
+# sqlview-er
 
 > Visualizador de diagramas ER 100% client-side: cole um dump SQL e navegue por tabelas, relacionamentos, **triggers e procedures**. Sem servidor, sem build, sem dependências — abre o `index.html` e pronto.
+
+*A logo? SVG codificado à mão pela IA, claro — a lente que acende o que importa e deixa o resto dormir, que é exatamente o que o app faz. (Ela venceu um duelo contra um gerador de imagens. Está documentado nos commits.)*
 
 ![sqlview-er em ação: modo foco na tabela "pedidos", com trigger e procedure como nós do diagrama](docs/screenshot.png)
 

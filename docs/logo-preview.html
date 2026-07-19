@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<title>sqlview-er — propostas de logo (SVG)</title>
+<style>
+  body { margin:0; background:#0d1017; color:#e2e8f0; font-family: system-ui, sans-serif; padding:40px; }
+  h1 { font-size:20px; font-weight:600; margin:0 0 6px; }
+  p.sub { color:#94a3b8; margin:0 0 32px; font-size:13px; }
+  .grid { display:flex; gap:32px; flex-wrap:wrap; }
+  .card { background:#141926; border:1px solid rgba(148,163,184,.12); border-radius:16px; padding:24px; width:400px; }
+  .card h2 { font-size:14px; font-weight:600; margin:0 0 14px; color:#cbd5e1; }
+  .main svg { width:340px; height:340px; display:block; }
+  .sizes { display:flex; align-items:flex-end; gap:14px; margin-top:18px; }
+  .sizes .s svg { display:block; }
+  .sizes .lbl { font-size:10px; color:#64748b; text-align:center; margin-top:4px; }
+  .onlight { background:#f1f5f9; border-radius:10px; padding:10px; display:inline-flex; margin-top:14px; }
+</style>
+</head>
+<body>
+<h1>sqlview-er — propostas de logo <small style="color:#34d399">(SVG codificado à mão)</small></h1>
+<p class="sub">Conceito: a lente de foco — dentro dela o schema acorda; fora, dorme. Cada card mostra 340px, tamanhos reduzidos e teste sobre fundo claro.</p>
+
+<div class="grid">
+
+<!-- ============ VARIAÇÃO A — Lente descentrada, rede rica ============ -->
+<div class="card">
+<h2>A — "Observatório" (lente descentrada, rede contínua)</h2>
+<div class="main">
+<svg viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg">
+<defs>
+  <clipPath id="sq-a"><rect x="8" y="8" width="496" height="496" rx="112"/></clipPath>
+  <clipPath id="lens-a"><circle cx="296" cy="222" r="148"/></clipPath>
+  <filter id="desat-a"><feColorMatrix type="saturate" values="0.10"/></filter>
+  <filter id="soft-a" x="-60%" y="-60%" width="220%" height="220%"><feGaussianBlur stdDeviation="14"/></filter>
+  <filter id="soft2-a" x="-60%" y="-60%" width="220%" height="220%"><feGaussianBlur stdDeviation="5"/></filter>
+  <radialGradient id="vig-a" cx="50%" cy="42%" r="75%">
+    <stop offset="55%" stop-color="#000" stop-opacity="0"/>
+    <stop offset="100%" stop-color="#000" stop-opacity=".42"/>
+  </radialGradient>
+  <linearGradient id="rim-a" x1="0" y1="0" x2="1" y2="1">
+    <stop offset="0" stop-color="#5eead4"/>
+    <stop offset=".5" stop-color="#34d399"/>
+    <stop offset="1" stop-color="#166e50"/>
+  </linearGradient>
+  <pattern id="dots-a" width="22" height="22" patternUnits="userSpaceOnUse">
+    <circle cx="2" cy="2" r="1.1" fill="#94a3b8" opacity=".07"/>
+  </pattern>
+
+  <g id="net-a" fill="none" stroke-linecap="round">
+    <!-- halo do herói -->
+    <ellipse cx="296" cy="222" rx="72" ry="50" fill="#34d399" opacity=".16" filter="url(#soft-a)"/>
+    <!-- conexões vivas -->
+    <path d="M262,198 C240,190 232,175 221,162" stroke="#34d399" stroke-width="3"/>
+    <path d="M336,204 C356,196 366,184 375,172" stroke="#eab308" stroke-width="2.6" stroke-dasharray="5 6"/>
+    <path d="M336,240 C356,250 364,268 372,286" stroke="#c084fc" stroke-width="2.6" stroke-dasharray="5 6"/>
+    <path d="M258,246 C242,258 234,276 228,291" stroke="#34d399" stroke-width="3"/>
+    <!-- continuações para fora da lente -->
+    <path d="M183,146 C150,130 120,118 98,112" stroke="#94a3b8" stroke-width="2.4"/>
+    <path d="M409,158 C425,142 436,120 444,104" stroke="#94a3b8" stroke-width="2.4"/>
+    <path d="M402,308 C420,326 436,352 446,372" stroke="#94a3b8" stroke-width="2.4"/>
+    <path d="M214,308 C190,336 165,376 148,402" stroke="#94a3b8" stroke-width="2.4"/>
+    <path d="M203,164 C160,190 110,218 84,238" stroke="#94a3b8" stroke-width="2.2"/>
+    <path d="M391,180 C420,208 448,224 470,236" stroke="#94a3b8" stroke-width="2.2"/>
+    <!-- nós fantasmas (fora) -->
+    <rect x="73" y="98" width="36" height="25" rx="7" stroke="#818cf8" stroke-width="2.6" fill="#6366f1" fill-opacity=".07"/>
+    <rect x="429" y="80" width="34" height="24" rx="7" stroke="#eab308" stroke-width="2.6" fill="#eab308" fill-opacity=".07"/>
+    <rect x="434" y="368" width="34" height="24" rx="7" stroke="#c084fc" stroke-width="2.6" fill="#c084fc" fill-opacity=".07"/>
+    <rect x="124" y="398" width="36" height="25" rx="7" stroke="#818cf8" stroke-width="2.6" fill="#6366f1" fill-opacity=".07"/>
+    <circle cx="76" cy="244" r="8" stroke="#94a3b8" stroke-width="2.4"/>
+    <circle cx="476" cy="240" r="7" stroke="#94a3b8" stroke-width="2.4"/>
+    <!-- satélites dentro da lente -->
+    <rect x="183" y="136" width="42" height="29" rx="8" stroke="#818cf8" stroke-width="2.8" fill="#6366f1" fill-opacity=".10"/>
+    <line x1="192" y1="150" x2="214" y2="150" stroke="#818cf8" stroke-width="2" opacity=".55"/>
+    <rect x="371" y="152" width="42" height="29" rx="8" stroke="#eab308" stroke-width="2.8" fill="#eab308" fill-opacity=".10"/>
+    <line x1="380" y1="166" x2="402" y2="166" stroke="#eab308" stroke-width="2" opacity=".55"/>
+    <rect x="364" y="286" width="42" height="29" rx="8" stroke="#c084fc" stroke-width="2.8" fill="#c084fc" fill-opacity=".10"/>
+    <line x1="373" y1="300" x2="395" y2="300" stroke="#c084fc" stroke-width="2" opacity=".55"/>
+    <circle cx="224" cy="300" r="9" stroke="#818cf8" stroke-width="2.8" fill="#6366f1" fill-opacity=".12"/>
+    <!-- ponto de chave primária -->
+    <circle cx="340" cy="202" r="4.6" fill="#eab308" stroke="none"/>
+    <!-- nó herói -->
+    <rect x="254" y="194" width="84" height="56" rx="14" stroke="#34d399" stroke-width="3.6" fill="#34d399" fill-opacity=".12"/>
+    <line x1="268" y1="214" x2="312" y2="214" stroke="#34d399" stroke-width="2.6" opacity=".65"/>
+    <line x1="268" y1="230" x2="298" y2="230" stroke="#34d399" stroke-width="2.6" opacity=".45"/>
+  </g>
+</defs>
+
+<g clip-path="url(#sq-a)">
+  <rect x="8" y="8" width="496" height="496" fill="#12161f"/>
+  <rect x="8" y="8" width="496" height="496" fill="url(#dots-a)"/>
+  <use href="#net-a" filter="url(#desat-a)" opacity=".26"/>
+  <use href="#net-a" clip-path="url(#lens-a)"/>
+  <circle cx="296" cy="222" r="148" fill="none" stroke="#34d399" stroke-width="7" opacity=".28" filter="url(#soft2-a)"/>
+  <circle cx="296" cy="222" r="148" fill="none" stroke="url(#rim-a)" stroke-width="3.2"/>
+  <path d="M 186,130 A 148,148 0 0 1 296,74" fill="none" stroke="#f0fdfa" stroke-width="2.2" opacity=".5" stroke-linecap="round"/>
+  <rect x="8" y="8" width="496" height="496" fill="url(#vig-a)"/>
+</g>
+<rect x="8" y="8" width="496" height="496" rx="112" fill="none" stroke="rgba(148,163,184,.14)" stroke-width="2"/>
+</svg>
+</div>
+<div class="sizes">
+  <div class="s"><svg width="128" height="128" viewBox="0 0 512 512"><use href="#full-a"/></svg><div class="lbl">128</div></div>
+  <div class="s"><svg width="64" height="64" viewBox="0 0 512 512"><use href="#full-a"/></svg><div class="lbl">64</div></div>
+  <div class="s"><svg width="32" height="32" viewBox="0 0 512 512"><use href="#full-a"/></svg><div class="lbl">32</div></div>
+  <div class="s onlight"><svg width="64" height="64" viewBox="0 0 512 512"><use href="#full-a"/></svg></div>
+</div>
+</div>
+
+<!-- ============ VARIAÇÃO B — Lente central, leitura em ícone ============ -->
+<div class="card">
+<h2>B — "Farol" (lente central, poucos elementos, lê bem pequeno)</h2>
+<div class="main">
+<svg viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg">
+<defs>
+  <clipPath id="sq-b"><rect x="8" y="8" width="496" height="496" rx="112"/></clipPath>
+  <clipPath id="lens-b"><circle cx="256" cy="248" r="170"/></clipPath>
+  <filter id="desat-b"><feColorMatrix type="saturate" values="0.10"/></filter>
+  <filter id="soft-b" x="-60%" y="-60%" width="220%" height="220%"><feGaussianBlur stdDeviation="16"/></filter>
+  <filter id="soft2-b" x="-60%" y="-60%" width="220%" height="220%"><feGaussianBlur stdDeviation="6"/></filter>
+  <radialGradient id="vig-b" cx="50%" cy="45%" r="75%">
+    <stop offset="55%" stop-color="#000" stop-opacity="0"/>
+    <stop offset="100%" stop-color="#000" stop-opacity=".42"/>
+  </radialGradient>
+  <linearGradient id="rim-b" x1="0" y1="0" x2="1" y2="1">
+    <stop offset="0" stop-color="#5eead4"/>
+    <stop offset=".5" stop-color="#34d399"/>
+    <stop offset="1" stop-color="#166e50"/>
+  </linearGradient>
+  <pattern id="dots-b" width="24" height="24" patternUnits="userSpaceOnUse">
+    <circle cx="2" cy="2" r="1.2" fill="#94a3b8" opacity=".07"/>
+  </pattern>
+
+  <g id="net-b" fill="none" stroke-linecap="round">
+    <ellipse cx="256" cy="248" rx="86" ry="60" fill="#34d399" opacity=".17" filter="url(#soft-b)"/>
+    <!-- conexões -->
+    <path d="M214,224 C186,208 172,192 158,174" stroke="#34d399" stroke-width="4.2"/>
+    <path d="M300,222 C328,206 342,190 355,173" stroke="#eab308" stroke-width="3.6" stroke-dasharray="7 8"/>
+    <path d="M302,276 C330,292 344,308 357,326" stroke="#c084fc" stroke-width="3.6" stroke-dasharray="7 8"/>
+    <path d="M212,274 C186,290 172,306 159,324" stroke="#34d399" stroke-width="4.2"/>
+    <!-- continuações fantasmas -->
+    <path d="M140,158 C116,132 96,112 82,98" stroke="#94a3b8" stroke-width="3.2"/>
+    <path d="M372,158 C396,132 416,112 430,98" stroke="#94a3b8" stroke-width="3.2"/>
+    <path d="M374,340 C398,366 418,386 432,400" stroke="#94a3b8" stroke-width="3.2"/>
+    <path d="M142,340 C118,366 98,386 84,400" stroke="#94a3b8" stroke-width="3.2"/>
+    <!-- nós fantasmas nos cantos -->
+    <rect x="56" y="72" width="40" height="28" rx="8" stroke="#818cf8" stroke-width="3.2" fill="#6366f1" fill-opacity=".07"/>
+    <rect x="416" y="72" width="40" height="28" rx="8" stroke="#eab308" stroke-width="3.2" fill="#eab308" fill-opacity=".07"/>
+    <rect x="416" y="398" width="40" height="28" rx="8" stroke="#c084fc" stroke-width="3.2" fill="#c084fc" fill-opacity=".07"/>
+    <rect x="56" y="398" width="40" height="28" rx="8" stroke="#818cf8" stroke-width="3.2" fill="#6366f1" fill-opacity=".07"/>
+    <!-- satélites -->
+    <rect x="118" y="146" width="52" height="36" rx="10" stroke="#818cf8" stroke-width="3.6" fill="#6366f1" fill-opacity=".10"/>
+    <line x1="130" y1="164" x2="158" y2="164" stroke="#818cf8" stroke-width="2.6" opacity=".55"/>
+    <rect x="342" y="146" width="52" height="36" rx="10" stroke="#eab308" stroke-width="3.6" fill="#eab308" fill-opacity=".10"/>
+    <line x1="354" y1="164" x2="382" y2="164" stroke="#eab308" stroke-width="2.6" opacity=".55"/>
+    <rect x="344" y="316" width="52" height="36" rx="10" stroke="#c084fc" stroke-width="3.6" fill="#c084fc" fill-opacity=".10"/>
+    <line x1="356" y1="334" x2="384" y2="334" stroke="#c084fc" stroke-width="2.6" opacity=".55"/>
+    <rect x="118" y="316" width="52" height="36" rx="10" stroke="#818cf8" stroke-width="3.6" fill="#6366f1" fill-opacity=".10"/>
+    <line x1="130" y1="334" x2="158" y2="334" stroke="#818cf8" stroke-width="2.6" opacity=".55"/>
+    <!-- ponto PK -->
+    <circle cx="305" cy="220" r="5.4" fill="#eab308" stroke="none"/>
+    <!-- herói -->
+    <rect x="204" y="214" width="104" height="68" rx="16" stroke="#34d399" stroke-width="4.6" fill="#34d399" fill-opacity=".13"/>
+    <line x1="222" y1="238" x2="278" y2="238" stroke="#34d399" stroke-width="3.2" opacity=".65"/>
+    <line x1="222" y1="258" x2="260" y2="258" stroke="#34d399" stroke-width="3.2" opacity=".45"/>
+  </g>
+</defs>
+
+<g clip-path="url(#sq-b)">
+  <rect x="8" y="8" width="496" height="496" fill="#12161f"/>
+  <rect x="8" y="8" width="496" height="496" fill="url(#dots-b)"/>
+  <use href="#net-b" filter="url(#desat-b)" opacity=".26"/>
+  <use href="#net-b" clip-path="url(#lens-b)"/>
+  <circle cx="256" cy="248" r="170" fill="none" stroke="#34d399" stroke-width="8" opacity=".26" filter="url(#soft2-b)"/>
+  <circle cx="256" cy="248" r="170" fill="none" stroke="url(#rim-b)" stroke-width="3.6"/>
+  <path d="M 132,140 A 170,170 0 0 1 256,78" fill="none" stroke="#f0fdfa" stroke-width="2.4" opacity=".5" stroke-linecap="round"/>
+  <rect x="8" y="8" width="496" height="496" fill="url(#vig-b)"/>
+</g>
+<rect x="8" y="8" width="496" height="496" rx="112" fill="none" stroke="rgba(148,163,184,.14)" stroke-width="2"/>
+</svg>
+</div>
+<div class="sizes">
+  <div class="s"><svg width="128" height="128" viewBox="0 0 512 512"><use href="#full-b"/></svg><div class="lbl">128</div></div>
+  <div class="s"><svg width="64" height="64" viewBox="0 0 512 512"><use href="#full-b"/></svg><div class="lbl">64</div></div>
+  <div class="s"><svg width="32" height="32" viewBox="0 0 512 512"><use href="#full-b"/></svg><div class="lbl">32</div></div>
+  <div class="s onlight"><svg width="64" height="64" viewBox="0 0 512 512"><use href="#full-b"/></svg></div>
+</div>
+</div>
+
+<!-- ============ VARIAÇÃO C — Recorte dramático ============ -->
+<div class="card">
+<h2>C — "Eclipse" (lente gigante cortada, assimetria dramática)</h2>
+<div class="main">
+<svg viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg">
+<defs>
+  <clipPath id="sq-c"><rect x="8" y="8" width="496" height="496" rx="112"/></clipPath>
+  <clipPath id="lens-c"><circle cx="340" cy="180" r="210"/></clipPath>
+  <filter id="desat-c"><feColorMatrix type="saturate" values="0.10"/></filter>
+  <filter id="soft-c" x="-60%" y="-60%" width="220%" height="220%"><feGaussianBlur stdDeviation="18"/></filter>
+  <filter id="soft2-c" x="-60%" y="-60%" width="220%" height="220%"><feGaussianBlur stdDeviation="7"/></filter>
+  <radialGradient id="vig-c" cx="55%" cy="38%" r="80%">
+    <stop offset="50%" stop-color="#000" stop-opacity="0"/>
+    <stop offset="100%" stop-color="#000" stop-opacity=".46"/>
+  </radialGradient>
+  <linearGradient id="rim-c" x1="0" y1="0" x2="1" y2="1">
+    <stop offset="0" stop-color="#5eead4"/>
+    <stop offset=".5" stop-color="#34d399"/>
+    <stop offset="1" stop-color="#166e50"/>
+  </linearGradient>
+  <pattern id="dots-c" width="22" height="22" patternUnits="userSpaceOnUse">
+    <circle cx="2" cy="2" r="1.1" fill="#94a3b8" opacity=".07"/>
+  </pattern>
+
+  <g id="net-c" fill="none" stroke-linecap="round">
+    <ellipse cx="352" cy="186" rx="92" ry="64" fill="#34d399" opacity=".15" filter="url(#soft-c)"/>
+    <!-- conexões vivas -->
+    <path d="M304,162 C276,148 258,134 242,116" stroke="#34d399" stroke-width="4.4"/>
+    <path d="M400,158 C424,146 438,132 450,116" stroke="#eab308" stroke-width="3.8" stroke-dasharray="7 8"/>
+    <path d="M402,212 C428,226 442,242 454,260" stroke="#c084fc" stroke-width="3.8" stroke-dasharray="7 8"/>
+    <path d="M306,214 C280,232 264,250 250,272" stroke="#34d399" stroke-width="4.4"/>
+    <!-- fio que desce para a penumbra -->
+    <path d="M244,282 C210,322 172,362 138,392" stroke="#94a3b8" stroke-width="3.4"/>
+    <path d="M230,112 C204,94 182,80 164,70" stroke="#94a3b8" stroke-width="3.2"/>
+    <path d="M138,392 C112,412 92,426 78,434" stroke="#94a3b8" stroke-width="3"/>
+    <!-- fantasmas na penumbra -->
+    <rect x="56" y="428" width="40" height="28" rx="8" stroke="#818cf8" stroke-width="3.2" fill="#6366f1" fill-opacity=".07"/>
+    <rect x="120" y="374" width="44" height="30" rx="9" stroke="#818cf8" stroke-width="3.2" fill="#6366f1" fill-opacity=".07"/>
+    <rect x="132" y="52" width="42" height="28" rx="8" stroke="#c084fc" stroke-width="3.2" fill="#c084fc" fill-opacity=".07"/>
+    <circle cx="86" cy="250" r="9" stroke="#94a3b8" stroke-width="3"/>
+    <path d="M100,254 C150,268 196,272 240,268" stroke="#94a3b8" stroke-width="2.6"/>
+    <!-- satélites vivos -->
+    <rect x="212" y="88" width="52" height="36" rx="10" stroke="#818cf8" stroke-width="3.8" fill="#6366f1" fill-opacity=".10"/>
+    <line x1="224" y1="106" x2="252" y2="106" stroke="#818cf8" stroke-width="2.6" opacity=".55"/>
+    <rect x="436" y="88" width="52" height="36" rx="10" stroke="#eab308" stroke-width="3.8" fill="#eab308" fill-opacity=".10"/>
+    <line x1="448" y1="106" x2="476" y2="106" stroke="#eab308" stroke-width="2.6" opacity=".55"/>
+    <rect x="440" y="252" width="52" height="36" rx="10" stroke="#c084fc" stroke-width="3.8" fill="#c084fc" fill-opacity=".10"/>
+    <line x1="452" y1="270" x2="480" y2="270" stroke="#c084fc" stroke-width="2.6" opacity=".55"/>
+    <rect x="216" y="262" width="52" height="36" rx="10" stroke="#818cf8" stroke-width="3.8" fill="#6366f1" fill-opacity=".10"/>
+    <line x1="228" y1="280" x2="256" y2="280" stroke="#818cf8" stroke-width="2.6" opacity=".55"/>
+    <!-- ponto PK -->
+    <circle cx="404" cy="156" r="5.6" fill="#eab308" stroke="none"/>
+    <!-- herói -->
+    <rect x="300" y="152" width="104" height="68" rx="16" stroke="#34d399" stroke-width="4.8" fill="#34d399" fill-opacity=".13"/>
+    <line x1="318" y1="176" x2="374" y2="176" stroke="#34d399" stroke-width="3.2" opacity=".65"/>
+    <line x1="318" y1="196" x2="356" y2="196" stroke="#34d399" stroke-width="3.2" opacity=".45"/>
+  </g>
+</defs>
+
+<g clip-path="url(#sq-c)">
+  <rect x="8" y="8" width="496" height="496" fill="#12161f"/>
+  <rect x="8" y="8" width="496" height="496" fill="url(#dots-c)"/>
+  <use href="#net-c" filter="url(#desat-c)" opacity=".26"/>
+  <use href="#net-c" clip-path="url(#lens-c)"/>
+  <circle cx="340" cy="180" r="210" fill="none" stroke="#34d399" stroke-width="9" opacity=".24" filter="url(#soft2-c)"/>
+  <circle cx="340" cy="180" r="210" fill="none" stroke="url(#rim-c)" stroke-width="3.8"/>
+  <path d="M 186,52 A 210,210 0 0 1 340,-30" fill="none" stroke="#f0fdfa" stroke-width="2.4" opacity=".45" stroke-linecap="round"/>
+  <rect x="8" y="8" width="496" height="496" fill="url(#vig-c)"/>
+</g>
+<rect x="8" y="8" width="496" height="496" rx="112" fill="none" stroke="rgba(148,163,184,.14)" stroke-width="2"/>
+</svg>
+</div>
+<div class="sizes">
+  <div class="s"><svg width="128" height="128" viewBox="0 0 512 512"><use href="#full-c"/></svg><div class="lbl">128</div></div>
+  <div class="s"><svg width="64" height="64" viewBox="0 0 512 512"><use href="#full-c"/></svg><div class="lbl">64</div></div>
+  <div class="s"><svg width="32" height="32" viewBox="0 0 512 512"><use href="#full-c"/></svg><div class="lbl">32</div></div>
+  <div class="s onlight"><svg width="64" height="64" viewBox="0 0 512 512"><use href="#full-c"/></svg></div>
+</div>
+</div>
+
+</div>
+
+<script>
+// Clona cada SVG principal para os previews pequenos (evita duplicar markup)
+document.querySelectorAll('.card').forEach((card, i) => {
+  const suffix = ['a','b','c'][i];
+  const mainSvg = card.querySelector('.main svg');
+  const wrapper = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+  wrapper.id = 'full-' + suffix;
+  while (mainSvg.firstChild) wrapper.appendChild(mainSvg.firstChild);
+  mainSvg.appendChild(wrapper);
+});
+</script>
+</body>
+</html>
