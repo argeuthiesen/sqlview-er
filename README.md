@@ -6,6 +6,8 @@
 
 > Visualizador de diagramas ER 100% client-side: cole um dump SQL e navegue por tabelas, relacionamentos, **triggers e procedures**. Sem servidor, sem build, sem dependências — abre o `index.html` e pronto.
 
+<p align="center"><strong>▶ <a href="https://argeuthiesen.github.io/sqlview-er/">Testar agora no navegador</a></strong> — nada pra instalar</p>
+
 ![sqlview-er em ação: modo foco na tabela "pedidos", com trigger e procedure como nós do diagrama](docs/screenshot.png)
 
 ## A história (ou: por que isso existe)
