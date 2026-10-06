@@ -1,77 +1,77 @@
 <p align="center">
-  <img src="docs/logo.svg" width="140" alt="sqlview-er — a lente de foco">
+  <img src="docs/logo.svg" width="140" alt="sqlview-er — the focus lens">
 </p>
 
 # sqlview-er
 
-> Visualizador de diagramas ER 100% client-side: cole um dump SQL e navegue por tabelas, relacionamentos, **triggers e procedures**. Sem servidor, sem build, sem dependências — abre o `index.html` e pronto.
+<p align="center"><strong>🇺🇸 English</strong> · <a href="README.pt-BR.md">🇧🇷 Português</a></p>
 
-<p align="center"><strong>▶ <a href="https://argeuthiesen.github.io/sqlview-er/">Testar agora no navegador</a></strong> — nada pra instalar</p>
+> Paste a SQL dump, get a map of your database — tables, relationships, and the **triggers, procedures and functions** everyone forgets are there, drawn as first-class nodes in the diagram. 100% client-side: no server, no build, no dependencies. Open `index.html` and you're done.
 
-![Navegando pelo schema com o modo foco: tabela → tabela → trigger → tabela → procedure, com o DDL acompanhando na sidebar](docs/demo.gif)
+<p align="center"><strong>▶ <a href="https://argeuthiesen.github.io/sqlview-er/">Try it in your browser</a></strong> — nothing to install</p>
 
-![sqlview-er em ação: modo foco na tabela "pedidos", com trigger e procedure como nós do diagrama](docs/screenshot.png)
+![Browsing a schema in focus mode: table → table → trigger → table and back to the overview, with the DDL following along in the sidebar](docs/demo.gif)
 
-## A história (ou: por que isso existe)
+## Why?
 
-Este projeto nasceu de uma necessidade pessoal misturada com uma curiosidade perigosa: **será que dá pra construir uma ferramenta inteira 100% codificada por IA?** Spoiler: deu. Nenhuma linha deste repositório foi digitada por um humano — eu só apontei, reclamei e aprovei.
+Because a database is more than its tables. The stuff that actually bites you in a legacy database is the logic hiding *around* them: the trigger that silently updates a total, the procedure nobody remembers, the function three reports depend on. In sqlview-er those show up in the diagram, wired to the tables they touch.
 
-A jornada começou no **Google Antigravity**, que montou um core bem interessante (parser, canvas, a base toda)... até esbarrar na composição da interface. Na hora de fazer o "clicou na tabela, acende as linhas, esmaece o resto", ele empacou de vez. Foi aí que o projeto migrou para o **Claude Code**, que encontrou os bugs herdados (alguns bem escondidos), terminou a interface e tocou todo o resto da evolução.
+And because a 60-table spaghetti diagram helps nobody, there's **focus mode**: click a table and everything related to it flies over and gathers around it — tables, triggers, procedures — while the rest fades out. Click a neighbor to hop to it. `ESC` puts everything back where it was.
 
-## O que ele NÃO é (leia antes de abrir uma issue brava)
+![sqlview-er in action: focus mode on the "orders" table, with a trigger, a function and a procedure as diagram nodes](docs/screenshot.png)
 
-- ❌ **Não é um produto.** Não tem roadmap, não tem SLA, não tem plano premium.
-- ❌ **Não pretende substituir ferramenta nenhuma** — que, aliás, eu propositalmente **nem testei**. A ideia era partir do zero, não partir de algo.
-- ❌ **Não quer virar um editor de schema.** A essência é ser uma ferramenta de **análise**: você joga o SQL, ele te mostra o mapa. Quem edita o banco é você, no lugar que você já usa pra isso.
+## What it does
 
-> ⚠️ **Aviso legal:** tudo o que foi dito acima pode mudar de rumo a qualquer momento, por absoluta falta do que fazer num fim de semana e vontade de ir atrás de um novo laboratório. Considere-se avisado.
+- **Parses SQL DDL** straight from `CREATE TABLE` — including real-world `mysqldump` output with `DELIMITER` and those `/*!50003 ... */` conditional comments where triggers like to hide
+- **Triggers, procedures and functions as diagram nodes**, linked to the tables they read or write (toggle them on/off in settings)
+- **Focus mode**: click a table, its relatives gather around it, the rest fades; `ESC` undoes it all
+- **Contextual DDL**: select anything and the editor jumps to its `CREATE` — or, with the editor folded, the sidebar shows just that snippet. No scrolling through a 5,000-line dump
+- **Multiple projects** in the browser (localStorage): import several databases and switch from a dropdown
+- **Save/open project** as a `.json` file (backup, another machine, sending it to a colleague)
+- Auto layouts (force, grid, circle), zoom/pan, **SVG export**
+- Collapsible sidebar (`Ctrl+B`) for canvas purists
+- **UI in 4 languages** (⚙️ settings): English, Portuguese, French and — because nobody asked — **Klingon** 🖖 (`raS tu'be'lu'. Qu'vatlh!`)
 
-## O que ele faz
+## How to use
 
-- **Parse de SQL DDL** direto do `CREATE TABLE` — incluindo dumps do `mysqldump` com `DELIMITER` e aqueles comentários condicionais `/*!50003 ... */` onde as triggers se escondem
-- **Triggers, procedures e functions como nós do diagrama**, ligados às tabelas que eles tocam (com liga/desliga na toolbar)
-- **Modo foco**: clique numa tabela e as relacionadas voam até ela, organizadas ao redor; o resto esmaece. `ESC` desfaz e tudo volta pro lugar
-- **Multi-projetos** no navegador (localStorage): importe vários bancos e alterne pelo combo
-- **Salvar/abrir projeto** em arquivo `.json` (backup, troca de máquina, mandar pro colega)
-- Layouts automáticos (força, grade, círculo), zoom/pan, exportar **SVG**
-- Editor SQL que rola até o `CREATE` da tabela/trigger selecionada
-- Sidebar recolhível (`Ctrl+B`) pra quem quer só o canvas
-- **Interface em 4 idiomas** (no ⚙️ de configurações): português, inglês, francês e — porque ninguém pediu — **Klingon** 🖖 (`raS tu'be'lu'. Qu'vatlh!`)
+1. Clone or download this repo
+2. Open `index.html` in your browser
+3. Paste your SQL (or hit **Import**) and explore
 
-## Como usar
+That's it. No 300MB `npm install`, no Docker, no server. The browser *is* the runtime. Your SQL never leaves your machine.
 
-1. Clone ou baixe este repositório
-2. Abra o `index.html` no navegador
-3. Cole seu SQL (ou **Importar SQL**) e explore
+## The story (or: why this exists)
 
-É isso. Sem `npm install` de 300MB, sem Docker, sem servidor. O navegador é o ambiente.
+This started as a personal itch mixed with a dangerous curiosity: **can you build an entire tool 100% coded by AI?** Spoiler: yes. Not a single line in this repo was typed by a human — I just pointed, complained and approved.
 
-## Contribuições
+The journey began on **Google Antigravity**, which built a pretty solid core (parser, canvas, the whole foundation)... until it hit the UI composition. When it came to "click the table, light up its lines, fade the rest", it got stuck for good. That's when the project moved to **Claude Code**, which found the inherited bugs (some well hidden), finished the interface and has driven everything since.
 
-Pull requests são bem-vindos! Issues também — de bug a ideia maluca. Só lembre da essência lá de cima: **análise, não edição**. PRs que tentarem transformar isso num dbdiagram da vida vão receber um "obrigado, mas não" carinhoso. (A menos que me pegue num daqueles fins de semana. Vide aviso legal.)
+## What it is NOT (read this before opening an angry issue)
 
-### Quer traduzir? Isso sim é MUITO bem-vindo 🌍
+- ❌ **Not a product.** No roadmap, no SLA, no premium plan.
+- ❌ **Not trying to replace anything** — which, by the way, I deliberately **never even tried**. The point was to start from zero, not from something.
+- ❌ **Not becoming a schema editor.** At its core it's an **analysis** tool: you throw SQL at it, it shows you the map. Editing the database is your job, wherever you already do that.
 
-Adicionar um idioma é a contribuição mais fácil do mundo: abra o [`lang.js`](lang.js), copie um dos blocos existentes (o `en` é um bom molde), traduza as ~50 chaves e pronto — **o seletor de idiomas no ⚙️ se monta sozinho** a partir do que estiver publicado ali. Sem registro, sem build, sem tocar em mais nenhum arquivo. Se o Klingon entrou, o seu idioma também entra. Esperanto? Guarani? Latim? Manda o PR.
+> ⚠️ **Legal notice:** everything above may change direction at any moment, out of sheer lack of anything better to do on a weekend and the urge to start a new lab experiment. Consider yourself warned.
+
+## Contributing
+
+Pull requests are welcome! Issues too — from bugs to crazy ideas. Just remember the core idea above: **analysis, not editing**. PRs trying to turn this into yet another dbdiagram will get a warm "thanks, but no". (Unless they catch me on one of those weekends. See legal notice.)
+
+### Want to translate it? That one is VERY welcome 🌍
+
+Adding a language is the easiest contribution in the world: open [`lang.js`](lang.js), copy one of the existing blocks (`en` is a good template), translate the ~50 keys and that's it — **the language picker in ⚙️ builds itself** from whatever is in there. No registration, no build, no other file to touch. If Klingon made it in, so can yours. Esperanto? Guarani? Latin? Send the PR.
 
 ---
 
-## English (tl;dr)
+## Author
 
-**sqlview-er** is a 100% client-side ER diagram viewer: paste a SQL dump and explore tables, relationships, **triggers and procedures** as first-class diagram nodes. Born from a personal itch plus the curiosity of building a fully AI-coded project — started on Google Antigravity (which built a nice core but got stuck on the UI), finished and evolved on Claude Code. Not a product, not a replacement for anything (deliberately never even tried the alternatives — the point was starting from zero). It's an **analysis** tool, not an editor, and it intends to stay that way... unless a boring weekend says otherwise.
+**Argeu Carlos Thiesen** — argeu.thiesen@gmail.com · Brazil 🇧🇷
 
-**Usage:** open `index.html` in your browser. That's it — no server, no build, no dependencies.
+Coded by AI (Google Antigravity + Claude Code), supervised by a human with strong opinions.
 
----
+The first partner on this journey was **Claude Fable 5** — who found the bugs, built the interface and translated the tool into Klingon without questioning my sanity. When it's no longer part of my plan, the copilot seat goes to **Claude Opus 4.8**. The handover is documented here for historical and sentimental purposes. 🤝
 
-## Autor
-
-**Argeu Carlos Thiesen** — argeu.thiesen@gmail.com
-
-Codificado por IA (Google Antigravity + Claude Code), supervisionado por um humano com opiniões fortes.
-
-O parceiro inicial desta jornada foi o **Claude Fable 5** — que encontrou os bugs, montou a interface e traduziu a ferramenta pra Klingon sem questionar minha sanidade. Quando ele deixar de fazer parte do meu pacote, quem assume o posto de copiloto do Argeu é o **Claude Opus 4.8**. A passagem de bastão está documentada aqui para fins históricos e sentimentais. 🤝
-
-## Licença
+## License
 
 [MIT](LICENSE)

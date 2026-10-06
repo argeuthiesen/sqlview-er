@@ -4,9 +4,11 @@
 
 // Imports removed for global script loading
 
-// Schema do "Projeto Demo" — criado apenas na primeira visita, quando
-// ainda não existe nenhum projeto salvo no navegador
-const DEMO_SQL = `-- ------------------------------------------------------------------
+// Schema do "Projeto Demo", um por idioma — criado na primeira visita,
+// quando ainda não existe nenhum projeto salvo no navegador. Idiomas sem
+// demo próprio (fr, tlh) usam o inglês.
+const DEMO_SQLS = {
+  'pt-BR': `-- ------------------------------------------------------------------
 -- Projeto Demo do sqlview-er: uma lojinha fictícia com tabelas,
 -- relacionamentos, triggers, procedure e function.
 -- Clique numa tabela pra focar; ESC volta. Importe seu SQL quando quiser!
@@ -76,7 +78,83 @@ BEGIN
   RETURN (SELECT SUM(pedTotal) FROM pedidos WHERE pedCliente = pCliente);
 END ;;
 DELIMITER ;
-`;
+`,
+  'en': `-- ------------------------------------------------------------------
+-- sqlview-er demo project: a tiny fictional shop with tables,
+-- relationships, triggers, a procedure and a function.
+-- Click a table to focus it; ESC goes back. Import your own SQL anytime!
+-- ------------------------------------------------------------------
+
+CREATE TABLE customers (
+  id INT PRIMARY KEY AUTO_INCREMENT,
+  name VARCHAR(255) NOT NULL,
+  email VARCHAR(255) UNIQUE NOT NULL,
+  created_at DATETIME
+);
+
+CREATE TABLE products (
+  id INT PRIMARY KEY AUTO_INCREMENT,
+  name VARCHAR(255) NOT NULL,
+  price DECIMAL(10,2) NOT NULL,
+  stock INT DEFAULT 0
+);
+
+CREATE TABLE orders (
+  id INT PRIMARY KEY AUTO_INCREMENT,
+  customer_id INT NOT NULL,
+  ordered_at DATETIME NOT NULL,
+  status ENUM('open','paid','shipped') NOT NULL,
+  total DECIMAL(10,2) DEFAULT 0,
+  FOREIGN KEY (customer_id) REFERENCES customers(id)
+);
+
+CREATE TABLE order_items (
+  id INT PRIMARY KEY AUTO_INCREMENT,
+  order_id INT NOT NULL,
+  product_id INT NOT NULL,
+  qty INT NOT NULL,
+  amount DECIMAL(10,2) NOT NULL,
+  FOREIGN KEY (order_id) REFERENCES orders(id),
+  FOREIGN KEY (product_id) REFERENCES products(id)
+);
+
+CREATE TABLE shipments (
+  id INT PRIMARY KEY AUTO_INCREMENT,
+  order_id INT NOT NULL,
+  tracking_code VARCHAR(50),
+  eta DATE,
+  FOREIGN KEY (order_id) REFERENCES orders(id)
+);
+
+-- Triggers: the hidden logic nobody remembers exists
+DELIMITER ;;
+CREATE TRIGGER trg_order_total AFTER INSERT ON order_items
+FOR EACH ROW BEGIN
+  UPDATE orders SET total = total + NEW.amount WHERE id = NEW.order_id;
+END ;;
+
+CREATE TRIGGER trg_decrease_stock AFTER INSERT ON order_items
+FOR EACH ROW BEGIN
+  UPDATE products SET stock = stock - NEW.qty WHERE id = NEW.product_id;
+END ;;
+
+CREATE PROCEDURE sales_report(IN p_from DATE)
+BEGIN
+  SELECT * FROM orders WHERE ordered_at >= p_from;
+END ;;
+
+CREATE FUNCTION customer_total(p_customer INT) RETURNS DECIMAL(10,2)
+DETERMINISTIC
+BEGIN
+  RETURN (SELECT SUM(total) FROM orders WHERE customer_id = p_customer);
+END ;;
+DELIMITER ;
+`
+};
+
+function demoSql() {
+  return DEMO_SQLS[I18N.current] || DEMO_SQLS.en;
+}
 
 class SQLDesignerApp {
   constructor() {
@@ -241,10 +319,33 @@ class SQLDesignerApp {
   }
 
   onLanguageChange() {
+    // Demo intocado acompanha o idioma (pedidos ↔ orders)
+    this.saveState();
+    if (this.syncDemoLanguage()) {
+      this.saveStore();
+      if (this.currentName === 'Projeto Demo') {
+        this.updateProjectSelect();
+        this.updateFoldHint();
+        this.loadCurrentProject(false);
+        return;
+      }
+    }
     // Rebuild everything that renders translated strings from JS
     this.updateProjectSelect();
     this.updateFoldHint();
     this.generateDiagram(false, false);
+  }
+
+  // Troca o SQL do demo pelo template do idioma atual, mas só se ele ainda
+  // for um template intocado — demo editado pelo usuário é dele, não mexe
+  syncDemoLanguage() {
+    const demo = this.projects['Projeto Demo'];
+    if (!demo || demo.sql === demoSql()) return false;
+    if (!Object.values(DEMO_SQLS).includes(demo.sql)) return false;
+    demo.sql = demoSql();
+    demo.positions = {};
+    delete demo.view;
+    return true;
   }
 
   saveUiState() {
@@ -354,7 +455,7 @@ class SQLDesignerApp {
         // Materializa o demo a partir do template se ele não existir
         if (!this.projects['Projeto Demo']) {
           this.saveState();
-          this.projects['Projeto Demo'] = { sql: DEMO_SQL, positions: {} };
+          this.projects['Projeto Demo'] = { sql: demoSql(), positions: {} };
           this.saveStore();
         }
         if (this.currentName !== 'Projeto Demo') {
@@ -366,7 +467,7 @@ class SQLDesignerApp {
         if (confirm(t('confirmDeleteProject', { name: this.currentName }))) {
           delete this.projects[this.currentName];
           if (Object.keys(this.projects).length === 0) {
-            this.projects['Projeto Demo'] = { sql: DEMO_SQL, positions: {} };
+            this.projects['Projeto Demo'] = { sql: demoSql(), positions: {} };
           }
           this.currentName = Object.keys(this.projects)[0];
           localStorage.setItem('sqldesigner_current', this.currentName);
@@ -580,7 +681,9 @@ class SQLDesignerApp {
     // Primeira visita: nasce com um projeto demo completo (tabelas,
     // triggers, procedure e function) em vez de um editor vazio
     if (Object.keys(this.projects).length === 0) {
-      this.projects['Projeto Demo'] = { sql: DEMO_SQL, positions: {} };
+      this.projects['Projeto Demo'] = { sql: demoSql(), positions: {} };
+      this.saveStore();
+    } else if (this.syncDemoLanguage()) {
       this.saveStore();
     }
 
@@ -641,7 +744,7 @@ class SQLDesignerApp {
     // sido materializado ou tenha sido excluído
     const demoOpt = document.createElement('option');
     demoOpt.value = '__demo__';
-    demoOpt.textContent = '✨ Projeto Demo';
+    demoOpt.textContent = t('demoProject');
     if (this.currentName === 'Projeto Demo') demoOpt.selected = true;
     this.projectSelect.appendChild(demoOpt);
 

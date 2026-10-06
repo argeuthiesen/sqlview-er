@@ -11,7 +11,8 @@ const LANGS = {
     flag: '🇧🇷',
     name: 'Português (Brasil)',
     strings: {
-      subtitle: 'Editor de Diagramas ER',
+      subtitle: 'Visualizador de diagramas ER',
+      demoProject: '✨ Projeto Demo',
       collapseSidebar: 'Recolher painel (Ctrl+B)',
       expandSidebar: 'Mostrar painel (Ctrl+B)',
       sqlSection: 'CÓDIGO SQL (DDL)',
@@ -73,7 +74,8 @@ const LANGS = {
     flag: '🇺🇸',
     name: 'English',
     strings: {
-      subtitle: 'ER Diagram Editor',
+      subtitle: 'ER diagram viewer',
+      demoProject: '✨ Demo project',
       collapseSidebar: 'Collapse panel (Ctrl+B)',
       expandSidebar: 'Show panel (Ctrl+B)',
       sqlSection: 'SQL CODE (DDL)',
@@ -135,7 +137,8 @@ const LANGS = {
     flag: '🇫🇷',
     name: 'Français',
     strings: {
-      subtitle: 'Éditeur de diagrammes ER',
+      subtitle: 'Visualiseur de diagrammes ER',
+      demoProject: '✨ Projet démo',
       collapseSidebar: 'Replier le panneau (Ctrl+B)',
       expandSidebar: 'Afficher le panneau (Ctrl+B)',
       sqlSection: 'CODE SQL (DDL)',
@@ -200,6 +203,7 @@ const LANGS = {
     name: 'tlhIngan Hol',
     strings: {
       subtitle: 'ER De\' nagh beQ',
+      demoProject: '✨ Demo',
       collapseSidebar: 'nagh beQ yISo\' (Ctrl+B)',
       expandSidebar: 'nagh beQ yI\'ang (Ctrl+B)',
       sqlSection: 'SQL ghItlh (DDL)',
